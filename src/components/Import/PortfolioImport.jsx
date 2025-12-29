@@ -185,13 +185,13 @@ export function PortfolioImport({ onImport, onClose }) {
                 </div>
 
                 <div className="import-tabs">
-                    <button className={`tab ${activeTab === 'demo' ? 'active' : ''}`} onClick={() => setActiveTab('demo')}>
+                    <button className={`tab ${activeTab === 'demo' ? 'active' : ''}`} onClick={() => { setActiveTab('demo'); setError(''); }}>
                         Smart Portfolios
                     </button>
-                    <button className={`tab ${activeTab === 'csv' ? 'active' : ''}`} onClick={() => setActiveTab('csv')}>
+                    <button className={`tab ${activeTab === 'csv' ? 'active' : ''}`} onClick={() => { setActiveTab('csv'); setError(''); }}>
                         Upload CSV
                     </button>
-                    <button className={`tab ${activeTab === 'manual' ? 'active' : ''}`} onClick={() => setActiveTab('manual')}>
+                    <button className={`tab ${activeTab === 'manual' ? 'active' : ''}`} onClick={() => { setActiveTab('manual'); setError(''); }}>
                         Manual Entry
                     </button>
                 </div>
