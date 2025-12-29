@@ -1,0 +1,91 @@
+/**
+ * Icon Styles
+ * Animations and effects for premium icons
+ */
+
+.structura-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.structura-icon.icon-animate {
+    animation: iconSpin 1s linear infinite;
+}
+
+@keyframes iconSpin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Button icon styling */
+.btn .structura-icon {
+    margin-right: 6px;
+}
+
+/* Icon color variants */
+.icon-primary {
+    color: var(--accent-cyan);
+}
+
+.icon-success {
+    color: var(--accent-green);
+}
+
+.icon-warning {
+    color: var(--accent-gold);
+}
+
+.icon-danger {
+    color: var(--accent-red, #ff5252);
+}
+
+.icon-muted {
+    color: var(--text-muted);
+}
+
+/* Hover effects */
+.icon-hover:hover {
+    color: var(--accent-cyan);
+    transform: scale(1.1);
+}
+
+/* Pulse animation for attention */
+.icon-pulse {
+    animation: iconPulse 2s ease-in-out infinite;
+}
+
+@keyframes iconPulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* Bounce animation */
+.icon-bounce {
+    animation: iconBounce 1s ease infinite;
+}
+
+@keyframes iconBounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-3px);
+    }
+}

@@ -1,0 +1,230 @@
+/**
+ * Professor Guide Styles
+ * Premium, animated guide component
+ */
+
+.professor-guide {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 1000;
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    animation: slideIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(100px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.professor-avatar {
+    width: 56px;
+    height: 56px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.professor-avatar:hover {
+    transform: scale(1.1);
+}
+
+.avatar-glow {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: var(--glass-bg);
+    border: 2px solid var(--accent-cyan);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow:
+        0 0 20px rgba(0, 217, 255, 0.3),
+        inset 0 0 20px rgba(0, 217, 255, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.avatar-glow::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg,
+            transparent 0%,
+            var(--accent-cyan) 25%,
+            transparent 50%,
+            var(--accent-gold) 75%,
+            transparent 100%);
+    opacity: 0;
+    animation: none;
+    z-index: -1;
+}
+
+.avatar-glow.thinking::before {
+    opacity: 0.5;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.avatar-svg {
+    width: 36px;
+    height: 36px;
+}
+
+/* Speech Bubble */
+.professor-speech {
+    max-width: 320px;
+    opacity: 1;
+    transform: translateX(0);
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.professor-speech.typing {
+    opacity: 0.7;
+}
+
+.speech-bubble {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 16px 20px;
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.speech-greeting {
+    margin: 0 0 8px 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.speech-greeting::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent-cyan);
+    animation: pulse 2s ease infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.5;
+        transform: scale(1.2);
+    }
+}
+
+.speech-details {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.speech-tail {
+    width: 16px;
+    height: 16px;
+    background: var(--glass-bg);
+    border-right: 1px solid var(--glass-border);
+    border-bottom: 1px solid var(--glass-border);
+    transform: rotate(45deg) translateY(-50%);
+    position: absolute;
+    right: -8px;
+    bottom: 24px;
+}
+
+/* Collapsed State */
+.professor-guide.collapsed .professor-speech {
+    display: none;
+}
+
+/* Professor Hint (inline) */
+.professor-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    margin: 8px 0;
+}
+
+.professor-hint.info {
+    background: rgba(0, 217, 255, 0.1);
+    border: 1px solid rgba(0, 217, 255, 0.2);
+    color: var(--accent-cyan);
+}
+
+.professor-hint.warning {
+    background: rgba(255, 167, 38, 0.1);
+    border: 1px solid rgba(255, 167, 38, 0.2);
+    color: var(--accent-gold);
+}
+
+.professor-hint.success {
+    background: rgba(0, 230, 118, 0.1);
+    border: 1px solid rgba(0, 230, 118, 0.2);
+    color: var(--accent-green);
+}
+
+.hint-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+.hint-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.hint-text {
+    color: var(--text-secondary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .professor-guide {
+        bottom: 16px;
+        right: 16px;
+    }
+
+    .professor-speech {
+        max-width: 260px;
+    }
+
+    .speech-bubble {
+        padding: 12px 16px;
+    }
+}

@@ -1,0 +1,121 @@
+/* Auth Component Styles */
+
+.auth-form-container {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-2xl);
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.auth-form-header {
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+}
+
+.auth-form-header h2 {
+    font-size: var(--text-2xl);
+    margin-bottom: var(--spacing-xs);
+    color: var(--accent-cyan);
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.form-group label {
+    font-size: var(--text-xs);
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.form-group input {
+    padding: var(--spacing-md);
+    font-size: var(--text-base);
+}
+
+.auth-error {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md);
+    background: rgba(255, 71, 87, 0.1);
+    border: 1px solid var(--accent-red);
+    border-radius: var(--radius-md);
+    color: var(--accent-red);
+    font-size: var(--text-sm);
+}
+
+.error-icon {
+    font-size: var(--text-lg);
+}
+
+.auth-success {
+    text-align: center;
+    padding: var(--spacing-xl);
+}
+
+.success-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(0, 210, 106, 0.15);
+    border: 2px solid var(--accent-green);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--text-2xl);
+    color: var(--accent-green);
+    margin: 0 auto var(--spacing-lg);
+}
+
+.auth-success h2 {
+    color: var(--accent-green);
+    margin-bottom: var(--spacing-md);
+}
+
+.auth-success p {
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-xl);
+    line-height: 1.6;
+}
+
+.auth-footer {
+    margin-top: var(--spacing-xl);
+    text-align: center;
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid var(--border-primary);
+}
+
+.auth-footer p {
+    font-size: var(--text-sm);
+    color: var(--text-tertiary);
+}
+
+.btn-link {
+    background: none;
+    border: none;
+    color: var(--accent-cyan);
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: inherit;
+    padding: 0;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color var(--transition-fast);
+}
+
+.btn-link:hover {
+    color: var(--accent-yellow);
+}

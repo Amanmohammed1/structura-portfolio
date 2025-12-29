@@ -1,0 +1,493 @@
+/* Import Component Styles - Redesigned for better UX */
+
+.import-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 24px;
+    backdrop-filter: blur(4px);
+}
+
+.import-modal {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 900px;
+    height: 80vh;
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+}
+
+.import-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 32px;
+    border-bottom: 1px solid var(--border-primary);
+    flex-shrink: 0;
+}
+
+.import-header h2 {
+    color: var(--accent-cyan);
+    font-size: var(--text-xl);
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: var(--text-tertiary);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+}
+
+.close-btn:hover {
+    color: var(--text-primary);
+}
+
+.import-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border-primary);
+    padding: 0 24px;
+    flex-shrink: 0;
+}
+
+.import-tabs .tab {
+    flex: 1;
+    padding: 16px 24px;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    max-width: 200px;
+}
+
+.import-tabs .tab:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+}
+
+.import-tabs .tab.active {
+    color: var(--accent-cyan);
+    border-bottom-color: var(--accent-cyan);
+}
+
+.import-error {
+    margin: 20px 32px;
+    padding: 12px 16px;
+    background: rgba(255, 71, 87, 0.1);
+    border: 1px solid var(--accent-red);
+    border-radius: 8px;
+    color: var(--accent-red);
+    font-size: 14px;
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.import-content {
+    padding: 32px;
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+}
+
+/* Demo Grid */
+.demo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.demo-card {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-lg);
+    text-align: left;
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.demo-card:hover {
+    border-color: var(--accent-cyan);
+    transform: translateY(-2px);
+}
+
+.demo-card h3 {
+    color: var(--text-primary);
+    font-size: var(--text-base);
+    margin-bottom: var(--spacing-xs);
+}
+
+.demo-card p {
+    color: var(--text-tertiary);
+    font-size: var(--text-xs);
+    margin-bottom: var(--spacing-md);
+    line-height: 1.4;
+}
+
+.demo-card .holdings-count {
+    display: inline-block;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background: var(--bg-hover);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-xs);
+    color: var(--accent-cyan);
+}
+
+.demo-metrics {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
+    font-size: var(--text-xs);
+}
+
+.demo-metrics .positive {
+    color: var(--accent-green);
+}
+
+.demo-metrics .negative {
+    color: var(--accent-red);
+}
+
+.demo-metrics .muted {
+    color: var(--text-tertiary);
+}
+
+.demo-loading {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: var(--spacing-xl);
+    color: var(--text-secondary);
+}
+
+/* CSV Upload */
+.csv-upload {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
+}
+
+.upload-zone {
+    position: relative;
+    border: 2px dashed var(--border-secondary);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-2xl);
+    text-align: center;
+    transition: all var(--transition-base);
+}
+
+.upload-zone:hover {
+    border-color: var(--accent-cyan);
+}
+
+.upload-zone input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.upload-zone label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-md);
+    color: var(--text-secondary);
+    cursor: pointer;
+}
+
+.upload-icon {
+    font-size: 2rem;
+}
+
+.csv-help {
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-lg);
+}
+
+.csv-help h4 {
+    color: var(--text-secondary);
+    font-size: var(--text-sm);
+    margin-bottom: var(--spacing-sm);
+}
+
+.csv-help ul {
+    list-style: none;
+    padding: 0;
+}
+
+.csv-help li {
+    color: var(--text-tertiary);
+    font-size: var(--text-xs);
+    padding: var(--spacing-xs) 0;
+}
+
+.csv-help li::before {
+    content: '✓ ';
+    color: var(--accent-green);
+}
+
+/* Manual Entry - Enhanced UX */
+.manual-entry {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    height: 100%;
+}
+
+.manual-hint {
+    font-size: 14px;
+    color: var(--text-secondary);
+    background: linear-gradient(135deg, rgba(0, 255, 255, 0.05), rgba(34, 197, 94, 0.05));
+    padding: 16px 20px;
+    border-radius: 12px;
+    border: 1px solid var(--border-primary);
+}
+
+.manual-hint strong {
+    color: var(--accent-cyan);
+}
+
+.manual-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+.manual-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    padding: 8px 0;
+}
+
+.stock-selector {
+    flex: 2.5;
+    position: relative;
+    z-index: 10;
+}
+
+.stock-selector input {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 15px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-primary);
+    border-radius: 10px;
+    color: var(--text-primary);
+    transition: all 0.2s ease;
+}
+
+.stock-selector input:focus {
+    border-color: var(--accent-cyan);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 255, 255, 0.1);
+}
+
+.stock-selector input::placeholder {
+    color: var(--text-tertiary);
+}
+
+.qty-input,
+.price-input {
+    padding: 14px 12px;
+    font-size: 14px;
+    text-align: center;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-primary);
+    border-radius: 10px;
+    color: var(--text-primary);
+}
+
+.qty-input {
+    flex: 0.7;
+}
+
+.price-input {
+    flex: 1;
+}
+
+.remove-btn {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-primary);
+    border-radius: 10px;
+    color: var(--text-tertiary);
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.2s ease;
+}
+
+.remove-btn:hover {
+    border-color: var(--accent-red);
+    color: var(--accent-red);
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.manual-actions {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-primary);
+    margin-top: auto;
+}
+
+.suggestions-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--bg-primary);
+    border: 1px solid var(--accent-cyan);
+    border-radius: 12px;
+    margin-top: 4px;
+    max-height: 350px;
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(0, 255, 255, 0.2);
+}
+
+.suggestions-dropdown.loading {
+    padding: 20px;
+    text-align: center;
+    color: var(--text-tertiary);
+}
+
+.suggestion-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 12px 16px;
+    background: none;
+    border: none;
+    border-bottom: 1px solid var(--border-primary);
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.suggestion-item:hover {
+    background: var(--bg-hover);
+}
+
+.suggestion-symbol {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    color: var(--accent-green);
+    font-size: 14px;
+    min-width: 90px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.nifty-badge-sm {
+    font-size: 9px;
+    background: var(--accent-cyan);
+    color: var(--bg-primary);
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-weight: 600;
+}
+
+.suggestion-name {
+    flex: 1;
+    font-size: 13px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.suggestion-sector {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    background: var(--bg-tertiary);
+    padding: 3px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+.qty-input {
+    flex: 0.6;
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--text-sm);
+    text-align: center;
+}
+
+.price-input {
+    flex: 0.8;
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--text-sm);
+    text-align: center;
+}
+
+.manual-hint {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    background: var(--bg-tertiary);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--spacing-md);
+}
+
+.remove-btn {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-sm);
+    color: var(--text-tertiary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.remove-btn:hover {
+    border-color: var(--accent-red);
+    color: var(--accent-red);
+}
+
+.manual-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--spacing-md);
+}
+
+.csv-hint {
+    text-align: center;
+    font-size: var(--text-xs);
+    color: var(--text-tertiary);
+}

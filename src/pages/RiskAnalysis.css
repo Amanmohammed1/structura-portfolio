@@ -1,0 +1,435 @@
+.risk-analysis-page {
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.page-header {
+    margin-bottom: 2rem;
+}
+
+.page-header h1 {
+    margin: 0 0 0.5rem;
+    font-size: 2rem;
+}
+
+.page-header p {
+    color: var(--color-text-muted);
+    margin: 0;
+}
+
+/* View Selector */
+.view-selector {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    background: rgba(30, 30, 46, 0.6);
+    padding: 0.5rem;
+    border-radius: 12px;
+    width: fit-content;
+}
+
+.view-btn {
+    background: none;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+
+.view-btn:hover {
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--color-text);
+}
+
+.view-btn.active {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+}
+
+/* Risk Level Card */
+.risk-level-card {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.05));
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.risk-label {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.risk-badge {
+    padding: 0.5rem 1.25rem;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+}
+
+.risk-badge.high {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+}
+
+.risk-badge.moderate {
+    background: rgba(245, 158, 11, 0.2);
+    color: #f59e0b;
+}
+
+.risk-badge.low {
+    background: rgba(16, 185, 129, 0.2);
+    color: #10b981;
+}
+
+.risk-description {
+    flex: 1;
+    min-width: 200px;
+    margin: 0;
+    color: var(--color-text-muted);
+}
+
+/* Sector Breakdown */
+.sector-breakdown {
+    background: rgba(30, 30, 46, 0.6);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.sector-breakdown h3 {
+    margin: 0 0 1.5rem;
+    font-size: 1.125rem;
+}
+
+.sector-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.sector-bar-row {
+    display: grid;
+    grid-template-columns: 120px 1fr 60px;
+    align-items: center;
+    gap: 1rem;
+}
+
+.sector-name {
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.sector-bar-container {
+    height: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.sector-bar-fill {
+    height: 100%;
+    border-radius: 6px;
+    transition: width 0.5s ease;
+}
+
+.sector-weight {
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-align: right;
+}
+
+/* Recommendations */
+.recommendations-section h3 {
+    margin: 0 0 1rem;
+    font-size: 1.125rem;
+}
+
+.recommendation-card {
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    border-left: 4px solid;
+}
+
+.recommendation-card.warning {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: #ef4444;
+}
+
+.recommendation-card.caution {
+    background: rgba(245, 158, 11, 0.1);
+    border-color: #f59e0b;
+}
+
+.recommendation-card.suggestion {
+    background: rgba(99, 102, 241, 0.1);
+    border-color: #6366f1;
+}
+
+.rec-type {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    opacity: 0.7;
+}
+
+.rec-message {
+    margin: 0.5rem 0;
+    font-weight: 500;
+}
+
+.rec-suggestion {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+}
+
+/* Stress Tests Grid */
+.stress-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+}
+
+.stress-card {
+    background: rgba(30, 30, 46, 0.6);
+    border: 2px solid;
+    border-radius: 16px;
+    padding: 1.5rem;
+    transition: transform 0.2s;
+}
+
+.stress-card:hover {
+    transform: translateY(-2px);
+}
+
+.stress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.stress-header h4 {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.severity-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.625rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: white;
+}
+
+.stress-description {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    margin: 0 0 1rem;
+}
+
+.stress-impact {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    padding: 1rem;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.impact-label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    margin-bottom: 0.5rem;
+}
+
+.impact-value {
+    display: block;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.impact-amount {
+    display: block;
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+}
+
+.affected-stocks {
+    font-size: 0.75rem;
+}
+
+.affected-label {
+    color: var(--color-text-muted);
+}
+
+.affected-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.affected-stock {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+}
+
+/* Historical Crashes */
+.portfolio-beta-card {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(168, 85, 247, 0.1));
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.beta-label {
+    display: block;
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    margin-bottom: 0.5rem;
+}
+
+.beta-value {
+    display: block;
+    font-size: 3rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #8b5cf6, #a855f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.beta-description {
+    margin: 0.5rem 0 0;
+    color: var(--color-text-muted);
+}
+
+.crashes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.crash-card {
+    background: rgba(30, 30, 46, 0.6);
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    padding: 1.5rem;
+}
+
+.crash-header {
+    margin-bottom: 1rem;
+}
+
+.crash-header h4 {
+    margin: 0 0 0.25rem;
+}
+
+.crash-period {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+}
+
+.crash-comparison {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.comparison-item {
+    text-align: center;
+    padding: 1rem;
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.2);
+    min-width: 100px;
+}
+
+.comparison-item.nifty .comp-value {
+    color: #ef4444;
+}
+
+.comparison-item.portfolio.better .comp-value {
+    color: #10b981;
+}
+
+.comparison-item.portfolio.worse .comp-value {
+    color: #ef4444;
+}
+
+.comp-label {
+    display: block;
+    font-size: 0.625rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    margin-bottom: 0.25rem;
+}
+
+.comp-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.comparison-arrow {
+    color: var(--color-text-muted);
+    font-size: 1.25rem;
+}
+
+.crash-interpretation {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    margin: 0 0 1rem;
+}
+
+.crash-recovery {
+    font-size: 0.75rem;
+    display: flex;
+    justify-content: space-between;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.recovery-label {
+    color: var(--color-text-muted);
+}
+
+.recovery-value {
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .risk-analysis-page {
+        padding: 1rem;
+    }
+
+    .view-selector {
+        flex-wrap: wrap;
+    }
+
+    .stress-grid,
+    .crashes-grid {
+        grid-template-columns: 1fr;
+    }
+}
