@@ -57,7 +57,15 @@ export function AuthProvider({ children }) {
 
     const signUp = async (email, password) => {
         setError(null);
-        const { data, error } = await supabase.auth.signUp({ email, password });
+        // Use the current origin for redirect (works for both dev and production)
+        const redirectUrl = window.location.origin;
+        const { data, error } = await supabase.auth.signUp({
+            email,
+            password,
+            options: {
+                emailRedirectTo: redirectUrl
+            }
+        });
         if (error) { setError(error.message); throw error; }
         return data;
     };
