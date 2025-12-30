@@ -222,7 +222,7 @@
 
 @media (max-width: 768px) {
 
-    /* MOBILE: Full-screen centered modal instead of sliding drawer */
+    /* MOBILE: Full-screen modal with scrollable content */
     .sidebar {
         position: fixed;
         top: 0;
@@ -237,10 +237,12 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
+        justify-content: flex-start;
+        padding-top: 10vh;
         background: rgba(17, 17, 27, 0.98);
         backdrop-filter: blur(20px);
         z-index: 100;
+        overflow-y: auto;
     }
 
     .sidebar.open {
@@ -295,9 +297,18 @@
     .sidebar-footer {
         width: 100%;
         max-width: 320px;
-        margin-top: 1.5rem;
+        margin-top: 2rem;
         padding: 1.5rem;
         border-top: 1px solid rgba(255, 255, 255, 0.05);
+        flex-shrink: 0;
+    }
+
+    /* Ensure sign-out button is clickable on mobile */
+    .sidebar-footer .sign-out-btn {
+        min-width: 44px;
+        min-height: 44px;
+        z-index: 10;
+        touch-action: manipulation;
     }
 
     .mobile-close-btn {
