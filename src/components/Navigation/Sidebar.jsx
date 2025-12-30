@@ -95,7 +95,6 @@ export function Sidebar() {
                         </span>
                         <div className="logo-text">
                             <span className="logo-name">Structura</span>
-                            <span className="logo-version">2.0</span>
                         </div>
                     </div>
                     {/* Close button visible on mobile inside sidebar */}

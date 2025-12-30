@@ -335,7 +335,7 @@ export function DashboardPage() {
                                     <div className="icon-face back">◈</div>
                                 </div>
                             </div>
-                            <h2><NeonText color="cyan">Welcome to Structura 2.0</NeonText></h2>
+                            <h2><NeonText color="cyan">Welcome to Structura</NeonText></h2>
                             <p className="welcome-text">
                                 Experience next-gen portfolio intelligence powered by
                                 <strong> Hierarchical Risk Parity</strong>. Get AI-driven insights,

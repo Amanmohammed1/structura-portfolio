@@ -13,6 +13,7 @@
 
 import { useState, useMemo } from 'react';
 import { usePortfolio } from '../components/Portfolio';
+import { ProfessorGuide } from '../components/Guide';
 import {
     calculateSectorConcentration,
     runStressTests,
@@ -253,6 +254,12 @@ export function RiskAnalysisPage() {
                     </div>
                 </div>
             )}
+
+            {/* Professor Guide */}
+            <ProfessorGuide
+                page="risk"
+                state={sectorAnalysis?.concentrationRisk === 'HIGH' ? 'highRisk' : 'idle'}
+            />
         </div>
     );
 }

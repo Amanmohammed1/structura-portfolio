@@ -146,6 +146,7 @@ export function PortfolioProvider({ children }) {
                         currentPrice,
                         currentValue,
                         avgBuyPrice,
+                        hrpWeight: h.hrpWeight || 0, // Preserve HRP weight from Dashboard analysis
                         weight: 0 // will be calculated below
                     };
                 });
