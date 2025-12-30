@@ -186,11 +186,15 @@ export function DashboardPage() {
         if (enrichedHoldings.length > 0 && prices && Object.keys(prices).length > 0) {
             // Merge HRP weights if result is available
             const holdingsWithWeights = enrichedHoldings.map(h => {
-                const hrpWeight = result?.weights?.hrp?.[h.symbol];
+                // result.weights.hrp is an ARRAY of {symbol, weight, percentage}
+                // Find the matching weight by symbol
+                const hrpEntry = result?.weights?.hrp?.find(w => w.symbol === h.symbol);
+                const hrpWeight = hrpEntry?.weight; // This is 0-1 decimal
+
                 return {
                     ...h,
-                    // Use HRP weight if available, otherwise current weight
-                    hrpWeight: hrpWeight ? hrpWeight * 100 : h.weight,
+                    // Use HRP weight if available (convert to %), otherwise current weight
+                    hrpWeight: hrpWeight !== undefined ? hrpWeight * 100 : h.weight,
                     // Use period start price as avgPrice for P&L
                     avgPrice: h.basePrice || h.currentPrice,
                     sector: h.sector || 'Other',
