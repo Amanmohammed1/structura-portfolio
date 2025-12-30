@@ -74,6 +74,9 @@ export function DashboardPage() {
 
     // Handle portfolio import - saves to localStorage for other pages
     const handleImport = useCallback((importedPortfolio) => {
+        // FIRST: Close the import modal immediately
+        setShowImport(false);
+
         setPortfolio(importedPortfolio);
 
         // Save to localStorage so My Portfolio, Risk, Advisor pages can read it
@@ -90,12 +93,14 @@ export function DashboardPage() {
         window.dispatchEvent(new CustomEvent('portfolio-updated'));
 
         // Clear any existing analysis when importing new portfolio
-        if (result) {
-            analyze(null); // Reset HRP result
+        // Wrap in try/catch to prevent errors from breaking the flow
+        try {
+            if (result) {
+                analyze(null); // Reset HRP result
+            }
+        } catch (e) {
+            console.warn('Error resetting HRP analysis:', e.message);
         }
-
-        // Close the import modal
-        setShowImport(false);
     }, [result, analyze]);
 
     // Analyze portfolio
