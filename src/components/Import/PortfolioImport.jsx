@@ -72,25 +72,31 @@ export function PortfolioImport({ onImport, onClose }) {
 
     const handleDemoSelect = (key) => {
         const demo = getDemoPortfolio(key);
-        if (demo) {
-            // Calculate equal-value quantities (₹100,000 base investment per stock at current price)
-            // This replaces the hardcoded qty=10 from the Edge Function
-            const baseInvestmentPerStock = 100000 / demo.holdings.length; // Equal allocation
 
-            const enrichedHoldings = demo.holdings.map(h => {
-                // Estimate current price from returns (if we know 1Y return and have a reference)
-                // For now, use a reasonable estimate based on price level if available
-                const estimatedPrice = h.price || 2000; // Most large-caps trade around ₹1000-5000
-                const quantity = Math.round(baseInvestmentPerStock / estimatedPrice);
+        if (!demo) {
+            setError('Portfolio data not loaded yet. Please try again.');
+            return;
+        }
 
-                return {
-                    ...h,
-                    quantity: Math.max(1, quantity), // At least 1 share
-                };
-            });
+        // Calculate equal-value quantities (₹100,000 base investment per stock at current price)
+        const baseInvestmentPerStock = 100000 / demo.holdings.length;
 
-            onImport({ name: demo.name, holdings: enrichedHoldings, source: 'demo' });
-            onClose?.();
+        const enrichedHoldings = demo.holdings.map(h => {
+            const estimatedPrice = h.price || 2000;
+            const quantity = Math.round(baseInvestmentPerStock / estimatedPrice);
+
+            return {
+                ...h,
+                quantity: Math.max(1, quantity),
+            };
+        });
+
+        // Import the portfolio
+        onImport({ name: demo.name, holdings: enrichedHoldings, source: 'demo' });
+
+        // ALWAYS close the modal after successful import
+        if (onClose) {
+            onClose();
         }
     };
 
