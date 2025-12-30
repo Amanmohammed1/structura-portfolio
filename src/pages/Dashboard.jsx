@@ -136,6 +136,31 @@ export function DashboardPage() {
         analyze(null);
     }, [analyze]);
 
+    // AUTO-ANALYZE: Trigger HRP analysis when a new portfolio is imported
+    const prevPortfolio = useRef(null);
+    useEffect(() => {
+        // Only trigger if portfolio changed AND it's a new import (not null)
+        if (portfolio && portfolio !== prevPortfolio.current && portfolio.holdings?.length >= 2) {
+            console.log('📊 New portfolio imported - auto-analyzing...');
+
+            const symbols = portfolio.holdings.map(h => h.symbol);
+            const allSymbols = [...symbols, '^NSEI']; // Include NIFTY benchmark
+
+            fetchPrices(allSymbols, dateRange).then(priceData => {
+                const niftyData = priceData['^NSEI'] || null;
+                const portfolioData = { ...priceData };
+                delete portfolioData['^NSEI'];
+
+                if (Object.keys(portfolioData).length >= 2) {
+                    analyze(portfolioData, niftyData);
+                }
+            }).catch(err => {
+                console.error('Auto-analyze failed:', err.message);
+            });
+        }
+        prevPortfolio.current = portfolio;
+    }, [portfolio, dateRange, fetchPrices, analyze]);
+
     // Auto re-analyze when date range changes (if portfolio exists and was analyzed)
     const prevDateRange = useRef(dateRange);
     useEffect(() => {
