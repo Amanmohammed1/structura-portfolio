@@ -64,12 +64,20 @@ export function Sidebar() {
         setIsOpen(false);
     };
 
+    // Handle opening sidebar - scroll to top on mobile
+    const handleMenuClick = () => {
+        if (!isOpen) {
+            window.scrollTo({ top: 0, behavior: 'instant' });
+        }
+        setIsOpen(!isOpen);
+    };
+
     return (
         <>
             {/* Mobile Menu Button */}
             <button
                 className="mobile-menu-btn"
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={handleMenuClick}
                 aria-label="Toggle menu"
             >
                 {isOpen ? <CloseIcon size={24} /> : <MenuIcon size={24} />}

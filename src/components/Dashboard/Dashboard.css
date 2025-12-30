@@ -858,10 +858,12 @@
 
 @media (max-width: 768px) {
 
-    /* Dashboard container - no extra padding for hamburger */
+    /* Dashboard container - flex layout for proper centering */
     .dashboard-content {
         padding: 1rem;
         min-height: 100vh;
+        display: flex;
+        flex-direction: column;
     }
 
     /* Actions bar - horizontal scroll on mobile */
@@ -906,9 +908,10 @@
         font-size: 0.7rem;
     }
 
-    /* Welcome / Empty state - Full screen centered */
+    /* Welcome / Empty state - Fill remaining space and center */
     .premium-empty {
-        min-height: calc(100vh - 2rem);
+        flex: 1;
+        min-height: 0;
         display: flex;
         align-items: center;
         justify-content: center;

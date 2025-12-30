@@ -442,8 +442,12 @@ export function DashboardPage() {
                                 <Dendrogram
                                     hierarchy={visualizationData?.hierarchy}
                                     symbols={result.symbols.map(s => getAssetName(s))}
-                                    width={Math.min(900, window.innerWidth - 340)}
-                                    height={Math.max(250, result.symbols.length * 22)}
+                                    width={window.innerWidth < 768
+                                        ? window.innerWidth - 48
+                                        : Math.min(900, window.innerWidth - 340)}
+                                    height={window.innerWidth < 768
+                                        ? Math.min(300, result.symbols.length * 18)
+                                        : Math.max(250, result.symbols.length * 22)}
                                 />
                             </div>
                         </div>
@@ -460,8 +464,12 @@ export function DashboardPage() {
                                     correlationMatrix={visualizationData?.correlationMatrix}
                                     symbols={result.symbols.map(s => getAssetName(s))}
                                     sortOrder={result.sortOrder}
-                                    width={Math.min(400, (window.innerWidth - 400) / 2)}
-                                    height={Math.min(400, (window.innerWidth - 400) / 2)}
+                                    width={window.innerWidth < 768
+                                        ? window.innerWidth - 48
+                                        : Math.min(400, (window.innerWidth - 400) / 2)}
+                                    height={window.innerWidth < 768
+                                        ? window.innerWidth - 48
+                                        : Math.min(400, (window.innerWidth - 400) / 2)}
                                 />
                             </div>
                         </div>
@@ -495,8 +503,10 @@ export function DashboardPage() {
                                     <PerformanceChart
                                         series={chartData.series}
                                         dates={chartData.dates}
-                                        width={Math.min(850, window.innerWidth - 380)}
-                                        height={350}
+                                        width={window.innerWidth < 768
+                                            ? window.innerWidth - 48
+                                            : Math.min(850, window.innerWidth - 380)}
+                                        height={window.innerWidth < 768 ? 250 : 350}
                                     />
                                 </div>
                             </div>
