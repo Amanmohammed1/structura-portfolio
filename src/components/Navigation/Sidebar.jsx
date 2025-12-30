@@ -141,7 +141,14 @@ export function Sidebar() {
                             <span className="user-plan">Free Plan</span>
                         </div>
                     </div>
-                    <button className="sign-out-btn" onClick={signOut} title="Sign Out">
+                    <button
+                        className="sign-out-btn"
+                        onClick={async () => {
+                            setIsOpen(false); // Close sidebar first
+                            await signOut();  // Wait for signout
+                        }}
+                        title="Sign Out"
+                    >
                         <LogoutIcon size={18} />
                     </button>
                 </div>

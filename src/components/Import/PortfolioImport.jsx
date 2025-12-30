@@ -71,9 +71,12 @@ export function PortfolioImport({ onImport, onClose }) {
     }, [manualHoldings, focusedRow, fetchSuggestions]);
 
     const handleDemoSelect = (key) => {
+        console.log('[PortfolioImport] handleDemoSelect called with key:', key);
         const demo = getDemoPortfolio(key);
+        console.log('[PortfolioImport] getDemoPortfolio returned:', demo ? demo.name : 'null/undefined');
 
         if (!demo) {
+            console.log('[PortfolioImport] Demo is falsy, showing error');
             setError('Portfolio data not loaded yet. Please try again.');
             return;
         }
@@ -92,11 +95,14 @@ export function PortfolioImport({ onImport, onClose }) {
         });
 
         // Import the portfolio
+        console.log('[PortfolioImport] Calling onImport with', enrichedHoldings.length, 'holdings');
         onImport({ name: demo.name, holdings: enrichedHoldings, source: 'demo' });
 
         // ALWAYS close the modal after successful import
+        console.log('[PortfolioImport] Calling onClose, onClose is:', typeof onClose);
         if (onClose) {
             onClose();
+            console.log('[PortfolioImport] onClose() called successfully');
         }
     };
 
