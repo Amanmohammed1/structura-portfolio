@@ -93,6 +93,9 @@ export function DashboardPage() {
         if (result) {
             analyze(null); // Reset HRP result
         }
+
+        // Close the import modal
+        setShowImport(false);
     }, [result, analyze]);
 
     // Analyze portfolio
