@@ -115,8 +115,7 @@
     .main-content {
         margin-left: 0;
         width: 100%;
-        padding-top: 60px;
-        /* Space for hamburger menu */
+        /* No padding-top - hamburger floats over content */
         min-width: unset;
         max-width: 100vw;
     }

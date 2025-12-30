@@ -265,7 +265,7 @@
     }
 }
 
-/* Mobile Menu Button - Hamburger */
+/* Mobile Menu Button - Hamburger with Glass Effect */
 .mobile-menu-btn {
     display: none;
     position: fixed;
@@ -274,14 +274,16 @@
     z-index: 150;
     width: 44px;
     height: 44px;
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.9), rgba(139, 92, 246, 0.9));
-    border: none;
+    background: rgba(99, 102, 241, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 12px;
     color: white;
     cursor: pointer;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.4);
+    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05);
     transition: all 0.2s;
 }
 

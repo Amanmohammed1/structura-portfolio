@@ -858,85 +858,130 @@
 
 @media (max-width: 768px) {
 
-    /* Dashboard container */
+    /* Dashboard container - no extra padding for hamburger */
     .dashboard-content {
         padding: 1rem;
-        padding-top: 0;
-        /* Hamburger is fixed, content has padding-top from main-content */
+        min-height: 100vh;
     }
 
-    /* Actions bar - stack vertically */
+    /* Actions bar - horizontal scroll on mobile */
     .portfolio-actions {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 0.75rem;
-        padding: 1rem;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        gap: 0.5rem;
+        padding: 0.75rem;
         margin-bottom: 1rem;
+        scrollbar-width: none;
+        /* Firefox */
+    }
+
+    .portfolio-actions::-webkit-scrollbar {
+        display: none;
+        /* Chrome */
     }
 
     .portfolio-actions .btn {
-        width: 100%;
-        justify-content: center;
-        min-height: 44px;
+        flex-shrink: 0;
+        min-height: 40px;
+        font-size: 0.75rem;
+        padding: 0.5rem 0.75rem;
     }
 
     .portfolio-summary {
-        border-left: none;
-        border-top: 1px solid var(--border-primary);
-        padding: 0.75rem 0 0 0;
-        text-align: center;
+        flex-shrink: 0;
+        border-left: 1px solid var(--border-primary);
+        padding: 0 0.75rem;
+        text-align: left;
     }
 
     .date-range-buttons {
-        width: 100%;
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        flex-shrink: 0;
+        display: flex;
+        gap: 0.25rem;
     }
 
     .date-btn {
-        padding: 0.75rem 0.5rem;
+        padding: 0.5rem 0.625rem;
+        font-size: 0.7rem;
     }
 
-    /* Welcome / Empty state */
+    /* Welcome / Empty state - Full screen centered */
     .premium-empty {
-        min-height: auto;
-        padding: 2rem 0;
+        min-height: calc(100vh - 2rem);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
     }
 
     .welcome-card {
         max-width: 100%;
-        margin: 0 auto;
+        margin: 0;
+        border: none;
+        background: transparent;
     }
 
     .welcome-content {
-        padding: 1.5rem;
+        padding: 2rem 1.5rem;
+        text-align: center;
     }
 
-    .welcome-content h2 {
-        font-size: 1.25rem;
-    }
-
-    .welcome-text {
-        font-size: 0.875rem;
+    .welcome-icon {
         margin-bottom: 1.5rem;
     }
 
+    .icon-3d {
+        width: 64px;
+        height: 64px;
+    }
+
+    .icon-face {
+        font-size: 2.5rem;
+    }
+
+    .welcome-content h2 {
+        font-size: 1.5rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .welcome-text {
+        font-size: 0.9rem;
+        line-height: 1.6;
+        margin-bottom: 2rem;
+        max-width: 300px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
     .welcome-features {
-        flex-direction: row;
-        flex-wrap: wrap;
+        display: flex;
         justify-content: center;
-        gap: 0.75rem;
+        gap: 0.5rem;
+        margin-bottom: 2rem;
     }
 
     .feature-item {
-        padding: 0.75rem;
-        font-size: 0.75rem;
+        padding: 0.625rem 0.875rem;
+        font-size: 0.7rem;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
     }
 
-    /* Floating orbs - smaller on mobile */
+    .feature-icon {
+        font-size: 1rem;
+    }
+
+    /* Hide floating orbs on mobile for cleaner look */
     .floating-orb {
-        opacity: 0.3;
-        transform: scale(0.5);
+        display: none;
+    }
+
+    /* MorphButton on mobile - full width */
+    .morph-button {
+        width: 100%;
+        max-width: 280px;
     }
 
     /* Main header */
