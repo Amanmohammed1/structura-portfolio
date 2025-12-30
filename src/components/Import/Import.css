@@ -492,6 +492,78 @@
     color: var(--text-tertiary);
 }
 
+/* Broker Connect */
+.broker-connect {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.broker-card {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-xl);
+    text-align: center;
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.broker-card:hover {
+    border-color: var(--accent-cyan);
+    transform: translateY(-2px);
+}
+
+.broker-card.coming-soon {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.broker-card.coming-soon:hover {
+    transform: none;
+    border-color: var(--border-primary);
+}
+
+.broker-logo {
+    font-size: 2.5rem;
+    margin-bottom: var(--spacing-md);
+}
+
+.broker-card h3 {
+    color: var(--text-primary);
+    font-size: var(--text-lg);
+    margin-bottom: var(--spacing-xs);
+}
+
+.broker-card p {
+    color: var(--text-tertiary);
+    font-size: var(--text-sm);
+    margin-bottom: var(--spacing-md);
+}
+
+.connect-btn {
+    display: inline-block;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+    color: var(--bg-primary);
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    font-size: var(--text-sm);
+}
+
+.connect-btn.disabled {
+    background: var(--bg-hover);
+    color: var(--text-tertiary);
+}
+
+.broker-note {
+    grid-column: 1 / -1;
+    text-align: center;
+    font-size: var(--text-xs);
+    color: var(--text-tertiary);
+    margin-top: var(--spacing-md);
+}
+
 /* ==========================================
    MOBILE RESPONSIVE - IMPORT MODAL
    ========================================== */
@@ -531,14 +603,16 @@
 
     .import-tabs {
         padding: 0 16px;
+        overflow-x: auto;
     }
 
     .import-tabs .tab {
         padding: 12px 8px;
-        font-size: 11px;
+        font-size: 10px;
         text-transform: uppercase;
         letter-spacing: 0.5px;
         max-width: none;
+        white-space: nowrap;
     }
 
     .import-error {
@@ -567,6 +641,15 @@
 
     .demo-card p {
         font-size: 0.75rem;
+    }
+
+    /* Broker connect - single column on mobile */
+    .broker-connect {
+        grid-template-columns: 1fr;
+    }
+
+    .broker-card {
+        padding: 20px;
     }
 
     /* Upload zone */

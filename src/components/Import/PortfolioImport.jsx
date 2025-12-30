@@ -200,6 +200,9 @@ export function PortfolioImport({ onImport, onClose }) {
                     <button className={`tab ${activeTab === 'demo' ? 'active' : ''}`} onClick={() => { setActiveTab('demo'); setError(''); }}>
                         Smart Portfolios
                     </button>
+                    <button className={`tab ${activeTab === 'upstox' ? 'active' : ''}`} onClick={() => { setActiveTab('upstox'); setError(''); }}>
+                        🔗 Connect Broker
+                    </button>
                     <button className={`tab ${activeTab === 'csv' ? 'active' : ''}`} onClick={() => { setActiveTab('csv'); setError(''); }}>
                         Upload CSV
                     </button>
@@ -226,6 +229,39 @@ export function PortfolioImport({ onImport, onClose }) {
                                     <span className="holdings-count">{demo.holdingsCount} stocks</span>
                                 </button>
                             ))}
+                        </div>
+                    )}
+
+                    {activeTab === 'upstox' && (
+                        <div className="broker-connect">
+                            <div className="broker-card" onClick={async () => {
+                                try {
+                                    setError('');
+                                    const { data, error: fetchError } = await supabase.functions.invoke('upstox-auth', {
+                                        body: { action: 'get_auth_url' }
+                                    });
+                                    if (fetchError || !data?.authUrl) {
+                                        throw new Error(data?.error || 'Failed to get auth URL');
+                                    }
+                                    window.location.href = data.authUrl;
+                                } catch (err) {
+                                    setError('Failed to connect to Upstox: ' + err.message);
+                                }
+                            }}>
+                                <div className="broker-logo">📊</div>
+                                <h3>Upstox</h3>
+                                <p>Import your holdings from Upstox</p>
+                                <span className="connect-btn">Connect →</span>
+                            </div>
+                            <div className="broker-card coming-soon">
+                                <div className="broker-logo">🔵</div>
+                                <h3>Zerodha</h3>
+                                <p>Coming soon</p>
+                                <span className="connect-btn disabled">Soon</span>
+                            </div>
+                            <p className="broker-note">
+                                Your credentials are never stored. We only read your holdings.
+                            </p>
                         </div>
                     )}
 

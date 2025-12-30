@@ -10,6 +10,7 @@ import {
   RiskAnalysisPage,
   NextInvestmentPage
 } from './pages';
+import UpstoxCallbackPage from './pages/UpstoxCallback';
 import './styles/index.css';
 
 // Simple loading component
@@ -90,6 +91,11 @@ function AppRoutes() {
           <AppLayout>
             <NextInvestmentPage />
           </AppLayout>
+        </ProtectedRoute>
+      } />
+      <Route path="/callback/upstox" element={
+        <ProtectedRoute>
+          <UpstoxCallbackPage />
         </ProtectedRoute>
       } />
       <Route path="*" element={<Navigate to="/" replace />} />
