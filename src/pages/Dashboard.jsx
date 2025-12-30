@@ -246,62 +246,61 @@ export function DashboardPage() {
         return { invested, current, pnl, pnlPercent };
     }, [enrichedHoldings]);
 
+
     return (
         <div className="dashboard-content">
-            {/* Portfolio Actions Bar - replaces sidebar content */}
-            <div className="portfolio-actions">
-                <button
-                    className="btn btn-primary"
-                    onClick={() => setShowImport(true)}
-                >
-                    <ImportIcon size={16} /> Import Portfolio
-                </button>
+            {/* Portfolio Actions Bar - only show when portfolio exists */}
+            {portfolio && (
+                <div className="portfolio-actions">
+                    <button
+                        className="btn btn-primary"
+                        onClick={() => setShowImport(true)}
+                    >
+                        <ImportIcon size={16} /> Import
+                    </button>
 
-                {portfolio && (
-                    <>
-                        <div className="portfolio-summary">
-                            <span className="portfolio-name">{portfolio.name}</span>
-                            <span className="stock-count">{portfolio.holdings.length} stocks</span>
-                        </div>
+                    <div className="portfolio-summary">
+                        <span className="portfolio-name">{portfolio.name}</span>
+                        <span className="stock-count">{portfolio.holdings.length} stocks</span>
+                    </div>
 
-                        <div className="date-range-buttons">
-                            {['1y', '2y', '3y', '5y'].map(range => (
-                                <button
-                                    key={range}
-                                    className={`date-btn ${dateRange === range ? 'active' : ''}`}
-                                    onClick={() => setDateRange(range)}
-                                >
-                                    {range.toUpperCase()}
-                                </button>
-                            ))}
-                        </div>
-
-                        <button
-                            className="btn btn-primary analyze-btn"
-                            disabled={portfolio.holdings.length < 2 || isLoading}
-                            onClick={handleAnalyze}
-                        >
-                            {isLoading ? (
-                                <><RefreshIcon size={16} animate /> Analyzing...</>
-                            ) : result ? (
-                                <><RefreshIcon size={16} /> Re-analyze</>
-                            ) : (
-                                <><AnalyzeIcon size={16} /> Analyze</>
-                            )}
-                        </button>
-
-                        {result && (
-                            <button className="btn btn-ghost" onClick={clearAnalysis}>
-                                <ClearIcon size={14} /> Clear
+                    <div className="date-range-buttons">
+                        {['1y', '2y', '3y', '5y'].map(range => (
+                            <button
+                                key={range}
+                                className={`date-btn ${dateRange === range ? 'active' : ''}`}
+                                onClick={() => setDateRange(range)}
+                            >
+                                {range.toUpperCase()}
                             </button>
-                        )}
+                        ))}
+                    </div>
 
-                        <button className="btn btn-ghost" onClick={clearAll}>
-                            <BackIcon size={14} /> Start Over
+                    <button
+                        className="btn btn-primary analyze-btn"
+                        disabled={portfolio.holdings.length < 2 || isLoading}
+                        onClick={handleAnalyze}
+                    >
+                        {isLoading ? (
+                            <><RefreshIcon size={16} animate /> Analyzing...</>
+                        ) : result ? (
+                            <><RefreshIcon size={16} /> Re-analyze</>
+                        ) : (
+                            <><AnalyzeIcon size={16} /> Analyze</>
+                        )}
+                    </button>
+
+                    {result && (
+                        <button className="btn btn-ghost" onClick={clearAnalysis}>
+                            <ClearIcon size={14} /> Clear
                         </button>
-                    </>
-                )}
-            </div>
+                    )}
+
+                    <button className="btn btn-ghost" onClick={clearAll}>
+                        <BackIcon size={14} /> Reset
+                    </button>
+                </div>
+            )}
 
             {/* Main Dashboard Content */}
             {isLoading && (
