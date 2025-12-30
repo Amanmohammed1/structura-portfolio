@@ -491,3 +491,160 @@
     font-size: var(--text-xs);
     color: var(--text-tertiary);
 }
+
+/* ==========================================
+   MOBILE RESPONSIVE - IMPORT MODAL
+   ========================================== */
+
+@media (max-width: 768px) {
+    .import-modal-overlay {
+        padding: 0;
+        align-items: flex-end;
+        /* Slide up from bottom on mobile */
+    }
+
+    .import-modal {
+        width: 100%;
+        max-width: 100%;
+        height: 90vh;
+        min-height: auto;
+        border-radius: 20px 20px 0 0;
+        margin: 0;
+    }
+
+    .import-header {
+        padding: 16px 20px;
+    }
+
+    .import-header h2 {
+        font-size: 1rem;
+    }
+
+    .close-btn {
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.75rem;
+    }
+
+    .import-tabs {
+        padding: 0 16px;
+    }
+
+    .import-tabs .tab {
+        padding: 12px 8px;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        max-width: none;
+    }
+
+    .import-error {
+        margin: 12px 16px;
+        padding: 10px 12px;
+        font-size: 12px;
+    }
+
+    .import-content {
+        padding: 16px;
+    }
+
+    /* Demo grid - single column */
+    .demo-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .demo-card {
+        padding: 16px;
+    }
+
+    .demo-card h3 {
+        font-size: 0.9rem;
+    }
+
+    .demo-card p {
+        font-size: 0.75rem;
+    }
+
+    /* Upload zone */
+    .upload-zone {
+        padding: 24px 16px;
+    }
+
+    .upload-icon {
+        font-size: 1.5rem;
+    }
+
+    /* Manual entry - stack fields */
+    .manual-row {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .stock-selector {
+        flex: 1 1 100%;
+        z-index: 10;
+    }
+
+    .stock-selector input {
+        font-size: 16px;
+        /* Prevents iOS zoom */
+        padding: 12px 14px;
+    }
+
+    .qty-input,
+    .price-input {
+        flex: 1;
+        min-width: 0;
+        font-size: 16px;
+        padding: 12px 8px;
+    }
+
+    .remove-btn {
+        width: 44px;
+        height: 44px;
+    }
+
+    .manual-actions {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .manual-actions .btn {
+        width: 100%;
+        min-height: 44px;
+    }
+
+    /* Suggestions dropdown */
+    .suggestions-dropdown {
+        max-height: 200px;
+        border-radius: 8px;
+    }
+
+    .suggestion-item {
+        padding: 10px 12px;
+    }
+
+    .suggestion-symbol {
+        min-width: 80px;
+        font-size: 13px;
+    }
+
+    .suggestion-name {
+        font-size: 12px;
+    }
+
+    .suggestion-sector {
+        display: none;
+        /* Hide on mobile to save space */
+    }
+
+    /* Manual hint */
+    .manual-hint {
+        padding: 12px 14px;
+        font-size: 13px;
+    }
+}

@@ -180,3 +180,84 @@
 .auth-divider span {
     padding: 0 1rem;
 }
+
+/* ==========================================
+   MOBILE RESPONSIVE STYLES
+   ========================================== */
+
+/* Login Page Wrapper */
+.login-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: var(--bg-primary);
+}
+
+@media (max-width: 768px) {
+    .login-page {
+        padding: 1rem;
+        align-items: flex-start;
+        padding-top: 10vh;
+        /* Push down slightly from top */
+    }
+
+    .auth-form-container {
+        width: 95%;
+        max-width: 95%;
+        padding: 1.5rem;
+        margin: 0 auto;
+    }
+
+    .auth-form-header h2 {
+        font-size: 1.5rem;
+    }
+
+    /* Touch-friendly inputs - min 48px height for accessibility */
+    .form-group input {
+        padding: 0.875rem;
+        font-size: 16px;
+        /* Prevents iOS zoom on focus */
+        min-height: 48px;
+    }
+
+    /* Touch-friendly buttons */
+    .btn-google {
+        min-height: 48px;
+        font-size: 15px;
+    }
+
+    .auth-form .btn {
+        min-height: 48px;
+        font-size: 14px;
+    }
+
+    /* Tappable toggle link */
+    .auth-footer {
+        padding-top: 1rem;
+        margin-top: 1rem;
+    }
+
+    .btn-link {
+        padding: 0.5rem;
+        display: inline-block;
+    }
+
+    /* Error messages */
+    .auth-error {
+        font-size: 13px;
+        padding: 0.75rem;
+    }
+
+    /* Success state */
+    .auth-success {
+        padding: 1.5rem 1rem;
+    }
+
+    .success-icon {
+        width: 48px;
+        height: 48px;
+        font-size: 1.5rem;
+    }
+}

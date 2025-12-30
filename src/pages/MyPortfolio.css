@@ -649,3 +649,182 @@
 .portfolio-header h1 svg {
     color: var(--accent-cyan, #00d4ff);
 }
+
+/* ==========================================
+   MOBILE RESPONSIVE - MY PORTFOLIO
+   ========================================== */
+
+@media (max-width: 768px) {
+    .my-portfolio-page {
+        padding: 1rem;
+    }
+
+    .portfolio-header {
+        margin-bottom: 1.5rem;
+    }
+
+    .portfolio-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .portfolio-header p {
+        font-size: 0.875rem;
+    }
+
+    /* Summary cards - 2x2 grid */
+    .portfolio-summary-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .summary-card {
+        padding: 1rem;
+        border-radius: 12px;
+    }
+
+    .summary-card .card-label {
+        font-size: 0.7rem;
+    }
+
+    .summary-card .card-value {
+        font-size: 1.25rem;
+    }
+
+    .summary-card .card-percent {
+        font-size: 0.875rem;
+    }
+
+    /* Simulation section */
+    .simulation-section {
+        margin-bottom: 1.5rem;
+    }
+
+    .simulation-section h3 {
+        font-size: 0.875rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .simulation-toggle {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .simulation-btn {
+        min-width: auto;
+        width: 100%;
+        padding: 0.875rem 1rem;
+        font-size: 0.8rem;
+    }
+
+    .simulation-btn .btn-icon {
+        font-size: 1rem;
+    }
+
+    .simulation-btn .btn-desc {
+        font-size: 0.7rem;
+    }
+
+    /* Simulation summary */
+    .simulation-summary {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+        padding: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .summary-item {
+        padding: 0.5rem;
+    }
+
+    .summary-item .label {
+        font-size: 0.65rem;
+    }
+
+    .summary-item .value {
+        font-size: 0.9rem;
+    }
+
+    /* Holdings section */
+    .holdings-section {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 0 -1rem;
+        padding: 0 1rem;
+    }
+
+    .holdings-section h2 {
+        font-size: 1rem;
+        margin-bottom: 0.75rem;
+    }
+
+    /* Holdings table - horizontal scroll */
+    .holdings-table {
+        min-width: 700px;
+        font-size: 0.75rem;
+    }
+
+    .holdings-table th,
+    .holdings-table td {
+        padding: 0.625rem 0.5rem;
+    }
+
+    .holdings-table th {
+        font-size: 0.65rem;
+    }
+
+    /* First column sticky */
+    .holdings-table th:first-child,
+    .holdings-table td:first-child {
+        position: sticky;
+        left: 0;
+        background: var(--bg-secondary, #1a1a2e);
+        z-index: 1;
+    }
+
+    /* Comparison columns */
+    .qty-comparison,
+    .value-comparison,
+    .weight-comparison {
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .qty-comparison .arrow,
+    .value-comparison .arrow,
+    .weight-comparison .arrow {
+        font-size: 0.6rem;
+    }
+
+    /* Action badges */
+    .trade-badge {
+        font-size: 0.65rem;
+        padding: 2px 6px;
+    }
+
+    .trade-value {
+        font-size: 0.6rem;
+    }
+
+    /* Methodology note */
+    .methodology-note {
+        padding: 0.75rem;
+        font-size: 0.75rem;
+        margin-top: 1rem;
+    }
+}
+
+/* Small phones */
+@media (max-width: 375px) {
+    .my-portfolio-page {
+        padding: 0.75rem;
+    }
+
+    .portfolio-summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .holdings-table {
+        min-width: 600px;
+    }
+}

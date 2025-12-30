@@ -851,3 +851,195 @@
     gap: 1.5rem;
     margin-bottom: 1.5rem;
 }
+
+/* ==========================================
+   MOBILE RESPONSIVE - DASHBOARD
+   ========================================== */
+
+@media (max-width: 768px) {
+
+    /* Dashboard container */
+    .dashboard-content {
+        padding: 1rem;
+        padding-top: 0;
+        /* Hamburger is fixed, content has padding-top from main-content */
+    }
+
+    /* Actions bar - stack vertically */
+    .portfolio-actions {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .portfolio-actions .btn {
+        width: 100%;
+        justify-content: center;
+        min-height: 44px;
+    }
+
+    .portfolio-summary {
+        border-left: none;
+        border-top: 1px solid var(--border-primary);
+        padding: 0.75rem 0 0 0;
+        text-align: center;
+    }
+
+    .date-range-buttons {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .date-btn {
+        padding: 0.75rem 0.5rem;
+    }
+
+    /* Welcome / Empty state */
+    .premium-empty {
+        min-height: auto;
+        padding: 2rem 0;
+    }
+
+    .welcome-card {
+        max-width: 100%;
+        margin: 0 auto;
+    }
+
+    .welcome-content {
+        padding: 1.5rem;
+    }
+
+    .welcome-content h2 {
+        font-size: 1.25rem;
+    }
+
+    .welcome-text {
+        font-size: 0.875rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .welcome-features {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.75rem;
+    }
+
+    .feature-item {
+        padding: 0.75rem;
+        font-size: 0.75rem;
+    }
+
+    /* Floating orbs - smaller on mobile */
+    .floating-orb {
+        opacity: 0.3;
+        transform: scale(0.5);
+    }
+
+    /* Main header */
+    .main-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .main-header h2 {
+        font-size: 1.25rem;
+    }
+
+    .portfolio-value {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .value-amount {
+        font-size: 1.25rem;
+    }
+
+    /* Dashboard grid - single column */
+    .dashboard-grid {
+        gap: 1rem;
+    }
+
+    .grid-row {
+        gap: 1rem;
+    }
+
+    .grid-row.half,
+    .grid-row.third-two-thirds,
+    .grid-row.two-thirds-third {
+        grid-template-columns: 1fr;
+    }
+
+    /* Panels */
+    .dashboard-panel {
+        border-radius: 8px;
+    }
+
+    .panel-header {
+        padding: 0.75rem 1rem;
+    }
+
+    .panel-title {
+        font-size: 0.75rem;
+    }
+
+    .panel-body {
+        padding: 1rem;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Charts - ensure they don't overflow */
+    .panel-body svg {
+        max-width: 100%;
+        height: auto;
+    }
+
+    /* Loading overlay */
+    .loading-overlay {
+        padding: 1rem;
+    }
+
+    .loading-spinner {
+        width: 48px;
+        height: 48px;
+    }
+
+    .loading-text {
+        font-size: 1rem;
+    }
+
+    /* Methodology disclaimer */
+    .methodology-disclaimer {
+        font-size: 0.7rem;
+        padding: 0.75rem;
+    }
+}
+
+/* Small phones (iPhone SE, etc) */
+@media (max-width: 375px) {
+    .dashboard-content {
+        padding: 0.75rem;
+    }
+
+    .portfolio-actions {
+        padding: 0.75rem;
+    }
+
+    .welcome-content {
+        padding: 1rem;
+    }
+
+    .welcome-features {
+        flex-direction: column;
+    }
+
+    .feature-item {
+        width: 100%;
+    }
+}
