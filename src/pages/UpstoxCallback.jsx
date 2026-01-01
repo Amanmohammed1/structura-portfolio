@@ -32,39 +32,37 @@ export function UpstoxCallbackPage() {
             try {
                 setStatus('Exchanging token...');
 
-                // Exchange code for access token CLIENT-SIDE (from user's IP, not cloud)
-                // This bypasses Upstox's IP blocking for cloud servers
-                const tokenResponse = await fetch('https://api.upstox.com/v2/login/authorization/token', {
+                // Use Vercel API route for token exchange (server-side, Vercel IPs)
+                const tokenResponse = await fetch('/api/upstox-token', {
                     method: 'POST',
                     headers: {
-                        'accept': 'application/json',
-                        'Content-Type': 'application/x-www-form-urlencoded'
+                        'Content-Type': 'application/json'
                     },
-                    body: new URLSearchParams({
-                        code,
-                        client_id: 'd18cbda2-a079-4439-9ff7-9c26c0df3b4c',
-                        client_secret: '8slcqwe96k',
-                        redirect_uri: 'https://structura-portfolio.vercel.app/callback/upstox',
-                        grant_type: 'authorization_code'
-                    })
+                    body: JSON.stringify({ code })
                 });
 
                 const tokenData = await tokenResponse.json();
 
                 if (!tokenData.access_token) {
                     console.error('Token exchange failed:', tokenData);
-                    throw new Error(tokenData.errors?.[0]?.message || 'Token exchange failed');
+                    throw new Error(tokenData.error || tokenData.details?.errors?.[0]?.message || 'Token exchange failed');
                 }
 
                 setStatus('Fetching your holdings...');
 
-                // Fetch holdings via Edge Function (uses access token, not credentials)
-                const { data: holdingsData, error: holdingsError } = await supabase.functions.invoke('upstox-auth', {
-                    body: { action: 'get_holdings', accessToken: tokenData.access_token }
+                // Fetch holdings via Vercel API route
+                const holdingsResponse = await fetch('/api/upstox-holdings', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ accessToken: tokenData.access_token })
                 });
 
-                if (holdingsError || !holdingsData?.holdings) {
-                    throw new Error(holdingsData?.error || 'Failed to fetch holdings');
+                const holdingsData = await holdingsResponse.json();
+
+                if (!holdingsData.holdings) {
+                    throw new Error(holdingsData.error || 'Failed to fetch holdings');
                 }
 
                 // Store in localStorage for import
