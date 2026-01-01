@@ -79,7 +79,7 @@ export function getSector(symbol) {
 
 /**
  * Pre-fetch all sectors for a list of symbols
- * Uses database first, then Edge Function (Yahoo Finance) as fallback
+ * Uses database first, then Edge Function (Yahoo Finance) for missing/unknown sectors
  */
 export async function fetchSectorCache(symbols) {
     const tradingSymbols = symbols.map(s => s.replace('.NS', '').replace('.BSE', ''));
@@ -91,32 +91,40 @@ export async function fetchSectorCache(symbols) {
             .select('trading_symbol, sector')
             .in('trading_symbol', tradingSymbols);
 
+        const dbSectors = new Map();
         if (!error && data) {
             data.forEach(row => {
-                sectorCache[row.trading_symbol] = row.sector;
+                // Only cache if sector is valid (not null, empty, or 'Other')
+                if (row.sector && row.sector !== 'Other' && row.sector.trim() !== '') {
+                    sectorCache[row.trading_symbol] = row.sector;
+                    dbSectors.set(row.trading_symbol, row.sector);
+                }
             });
         }
 
-        // Step 2: Find symbols not in database
-        const foundSymbols = new Set(data?.map(d => d.trading_symbol) || []);
-        const missingSymbols = tradingSymbols.filter(s => !foundSymbols.has(s));
+        // Step 2: Find symbols that need Yahoo Finance lookup
+        // Either not in database OR have null/empty/Other sector
+        const needsFetch = tradingSymbols.filter(s => {
+            const dbSector = dbSectors.get(s);
+            return !dbSector; // Not found or invalid sector
+        });
 
         // Step 3: Fetch missing sectors via Edge Function (bypasses CORS)
-        if (missingSymbols.length > 0) {
-            console.log(`Fetching sectors from Edge Function for: ${missingSymbols.join(', ')}`);
+        if (needsFetch.length > 0) {
+            console.log(`Fetching sectors from Yahoo for: ${needsFetch.join(', ')}`);
             try {
                 const { data: sectorData, error: sectorError } = await supabase.functions.invoke('fetch-sectors', {
-                    body: { symbols: missingSymbols }
+                    body: { symbols: needsFetch }
                 });
 
                 if (!sectorError && sectorData?.sectors) {
                     Object.entries(sectorData.sectors).forEach(([symbol, sector]) => {
                         sectorCache[symbol] = sector;
                     });
-                    console.log('Sectors fetched:', sectorData.sectors);
+                    console.log('Sectors fetched from Yahoo:', sectorData.sectors);
                 }
             } catch (edgeFnError) {
-                console.warn('Edge function failed, sectors will be Other:', edgeFnError);
+                console.warn('Edge function failed:', edgeFnError);
             }
         }
     } catch (err) {
