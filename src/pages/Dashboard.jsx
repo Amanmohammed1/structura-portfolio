@@ -1,4 +1,5 @@
 import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../components/Auth';
 import { PortfolioImport } from '../components/Import';
 import { HealthScore, RebalancingSuggestions } from '../components/Analytics';
@@ -19,7 +20,7 @@ import {
     groupSuggestions,
 } from '../lib/analytics/rebalancing';
 import { enrichPortfolio, calculateWeights } from '../data/demoPortfolios';
-import { getAssetName } from '../data/assetUniverse';
+import { getAssetName, fetchSectorCache, getSector } from '../data/assetUniverse';
 import { ProfessorGuide } from '../components/Guide';
 import {
     ImportIcon,
@@ -46,6 +47,8 @@ export function DashboardPage() {
     const { user, signOut } = useAuth();
     const { prices, loading: pricesLoading, error: pricesError, progress, fetchPrices } = usePrices();
     const { result, backtest, loading: analyzing, error: hrpError, analyze, visualizationData, chartData } = useHRP();
+    const [searchParams, setSearchParams] = useSearchParams();
+    const navigate = useNavigate();
 
     const [showImport, setShowImport] = useState(false);
     const [showAllHoldings, setShowAllHoldings] = useState(false);
@@ -77,6 +80,56 @@ export function DashboardPage() {
     useEffect(() => {
         localStorage.setItem('structura_date_range', dateRange);
     }, [dateRange]);
+
+    // Handle ?import=upstox from UpstoxCallback page
+    useEffect(() => {
+        const importSource = searchParams.get('import');
+        if (importSource === 'upstox') {
+            const processUpstoxImport = async () => {
+                try {
+                    const upstoxData = localStorage.getItem('upstox_holdings');
+                    if (!upstoxData) return;
+
+                    const { holdings: rawHoldings } = JSON.parse(upstoxData);
+                    if (!rawHoldings || rawHoldings.length === 0) return;
+
+                    // Fetch sectors from database
+                    const symbols = rawHoldings.map(h => h.symbol);
+                    await fetchSectorCache(symbols);
+
+                    // Enrich holdings with sectors, preserve pnl and other fields
+                    const enrichedHoldings = rawHoldings.map(h => ({
+                        ...h,  // Preserves pnl, avgBuyPrice, currentPrice, etc.
+                        sector: getSector(h.symbol),
+                    }));
+
+                    // Import the portfolio
+                    setPortfolio({
+                        name: 'Upstox Portfolio',
+                        holdings: enrichedHoldings,
+                        source: 'upstox'
+                    });
+
+                    // Save to main storage
+                    localStorage.setItem('structura_portfolio', JSON.stringify(enrichedHoldings));
+                    localStorage.setItem('structura_portfolio_meta', JSON.stringify({
+                        name: 'Upstox Portfolio',
+                        source: 'upstox',
+                        importedAt: new Date().toISOString()
+                    }));
+
+                    // Clear the query param
+                    setSearchParams({});
+
+                    // Dispatch event for other components
+                    window.dispatchEvent(new Event('portfolio-updated'));
+                } catch (err) {
+                    console.error('Failed to process Upstox import:', err);
+                }
+            };
+            processUpstoxImport();
+        }
+    }, [searchParams, setSearchParams]);
 
     // Handle portfolio import - saves to localStorage for other pages
     const handleImport = useCallback((importedPortfolio) => {
