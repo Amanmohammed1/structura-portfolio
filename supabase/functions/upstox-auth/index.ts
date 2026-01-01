@@ -9,7 +9,7 @@ const corsHeaders = {
 }
 
 const UPSTOX_API_KEY = Deno.env.get('UPSTOX_API_KEY') || 'd18cbda2-a079-4439-9ff7-9c26c0df3b4c'
-const UPSTOX_API_SECRET = Deno.env.get('UPSTOX_API_SECRET') || '0rcu0vm1mh'
+const UPSTOX_API_SECRET = Deno.env.get('UPSTOX_API_SECRET') || '8slcqwe96k'
 const REDIRECT_URI = 'https://structura-portfolio.vercel.app/callback/upstox'
 
 interface TokenResponse {
@@ -65,22 +65,38 @@ serve(async (req) => {
                 )
             }
 
+            console.log('Exchanging token with code:', code.substring(0, 4) + '...')
+            console.log('Using API key:', UPSTOX_API_KEY.substring(0, 8) + '...')
+            console.log('Using API secret:', UPSTOX_API_SECRET.substring(0, 4) + '...')
+            console.log('Redirect URI:', REDIRECT_URI)
+
+            // Build body string directly (avoid URLSearchParams encoding of redirect_uri)
+            const bodyString = `code=${encodeURIComponent(code)}&client_id=${encodeURIComponent(UPSTOX_API_KEY)}&client_secret=${encodeURIComponent(UPSTOX_API_SECRET)}&redirect_uri=${REDIRECT_URI}&grant_type=authorization_code`
+            console.log('Request body:', bodyString.replace(UPSTOX_API_SECRET, '***'))
+
             const tokenResponse = await fetch('https://api.upstox.com/v2/login/authorization/token', {
                 method: 'POST',
                 headers: {
+                    'accept': 'application/json',
                     'Content-Type': 'application/x-www-form-urlencoded',
-                    'Accept': 'application/json'
+                    'User-Agent': 'curl/7.88.1'
                 },
-                body: new URLSearchParams({
-                    code,
-                    client_id: UPSTOX_API_KEY,
-                    client_secret: UPSTOX_API_SECRET,
-                    redirect_uri: REDIRECT_URI,
-                    grant_type: 'authorization_code'
-                })
+                body: bodyString
             })
 
-            const tokenData: TokenResponse = await tokenResponse.json()
+            const tokenText = await tokenResponse.text()
+            console.log('Token response status:', tokenResponse.status)
+            console.log('Token response body:', tokenText)
+
+            let tokenData: TokenResponse
+            try {
+                tokenData = JSON.parse(tokenText)
+            } catch (e) {
+                return new Response(
+                    JSON.stringify({ error: 'Invalid response from Upstox', details: tokenText }),
+                    { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
+                )
+            }
 
             if (!tokenData.access_token) {
                 console.error('Token exchange failed:', tokenData)

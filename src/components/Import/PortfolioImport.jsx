@@ -249,18 +249,65 @@ export function PortfolioImport({ onImport, onClose }) {
                                 }
                             }}>
                                 <div className="broker-logo">📊</div>
-                                <h3>Upstox</h3>
-                                <p>Import your holdings from Upstox</p>
+                                <h3>Upstox OAuth</h3>
+                                <p>Login with your Upstox account</p>
                                 <span className="connect-btn">Connect →</span>
                             </div>
-                            <div className="broker-card coming-soon">
-                                <div className="broker-logo">🔵</div>
-                                <h3>Zerodha</h3>
-                                <p>Coming soon</p>
-                                <span className="connect-btn disabled">Soon</span>
+                            <div className="broker-card">
+                                <div className="broker-logo">🔑</div>
+                                <h3>Upstox Token</h3>
+                                <p>Paste token from developer portal</p>
+                                <input
+                                    type="text"
+                                    placeholder="Paste access token here"
+                                    className="token-input"
+                                    id="upstox-token"
+                                    style={{
+                                        marginTop: '8px',
+                                        width: '100%',
+                                        padding: '10px',
+                                        borderRadius: '8px',
+                                        border: '1px solid var(--border-primary)',
+                                        background: 'var(--bg-tertiary)',
+                                        color: 'var(--text-primary)',
+                                        fontSize: '12px'
+                                    }}
+                                    onClick={(e) => e.stopPropagation()}
+                                />
+                                <button
+                                    className="connect-btn"
+                                    style={{ marginTop: '12px', cursor: 'pointer', border: 'none' }}
+                                    onClick={async (e) => {
+                                        e.stopPropagation();
+                                        const token = document.getElementById('upstox-token')?.value;
+                                        if (!token) {
+                                            setError('Please paste your access token');
+                                            return;
+                                        }
+                                        setError('');
+                                        try {
+                                            const { data, error: fetchError } = await supabase.functions.invoke('upstox-auth', {
+                                                body: { action: 'get_holdings', accessToken: token }
+                                            });
+                                            if (fetchError || !data?.holdings) {
+                                                throw new Error(data?.error || 'Failed to fetch holdings');
+                                            }
+                                            onImport({
+                                                name: 'Upstox Portfolio',
+                                                holdings: data.holdings,
+                                                source: 'upstox'
+                                            });
+                                            if (onClose) onClose();
+                                        } catch (err) {
+                                            setError('Failed to import: ' + err.message);
+                                        }
+                                    }}
+                                >
+                                    Import Holdings
+                                </button>
                             </div>
                             <p className="broker-note">
-                                Your credentials are never stored. We only read your holdings.
+                                Get your access token from <a href="https://developer.upstox.com" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-cyan)' }}>developer.upstox.com</a> → Your App → Generate Token
                             </p>
                         </div>
                     )}
