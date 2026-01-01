@@ -104,7 +104,6 @@ export function DashboardPage() {
                     }));
 
                     // DEBUG: Log pnl values to verify they're preserved
-                    console.log('Upstox pnl values:', enrichedHoldings.map(h => ({ symbol: h.symbol, pnl: h.pnl })));
 
                     // Import the portfolio
                     setPortfolio({
@@ -114,7 +113,6 @@ export function DashboardPage() {
                     });
 
                     // Save to main storage
-                    console.log('UPSTOX HANDLER - SAVING to localStorage:', enrichedHoldings.map(h => ({ symbol: h.symbol, pnl: h.pnl })));
                     localStorage.setItem('structura_portfolio', JSON.stringify(enrichedHoldings));
                     localStorage.setItem('structura_portfolio_meta', JSON.stringify({
                         name: 'Upstox Portfolio',
@@ -141,9 +139,6 @@ export function DashboardPage() {
         setShowImport(false);
 
         setPortfolio(importedPortfolio);
-
-        // DEBUG: Log pnl values being saved to localStorage
-        console.log('SAVING to localStorage - pnl values:', importedPortfolio.holdings.map(h => ({ symbol: h.symbol, pnl: h.pnl })));
 
         // Save to localStorage so My Portfolio, Risk, Advisor pages can read it
         // PortfolioContext reads from this key

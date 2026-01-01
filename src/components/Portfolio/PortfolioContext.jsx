@@ -109,10 +109,6 @@ export function PortfolioProvider({ children }) {
                 }
 
                 const portfolio = JSON.parse(stored);
-
-                // DEBUG: Log pnl values read from localStorage
-                console.log('READ from localStorage - pnl values:', portfolio.map(h => ({ symbol: h.symbol, pnl: h.pnl })));
-
                 const symbols = portfolio.map(h => h.symbol);
 
                 if (symbols.length === 0) {
@@ -161,9 +157,6 @@ export function PortfolioProvider({ children }) {
                 enrichedHoldings.forEach(h => {
                     h.weight = totalValue > 0 ? (h.currentValue / totalValue) * 100 : 0;
                 });
-
-                // DEBUG: Log pnl values after enrichment
-                console.log('PortfolioContext pnl values:', enrichedHoldings.map(h => ({ symbol: h.symbol, pnl: h.pnl })));
 
                 // Store latest prices
                 const prices = {};

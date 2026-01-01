@@ -148,7 +148,8 @@ export function enrichPortfolio(holdings, currentPrices = {}, priceHistory = {})
             basePrice,
             investedValue,
             currentValue,
-            pnl: hasRealPrice ? currentValue - investedValue : 0,
+            // PRESERVE original pnl from broker (Upstox) if available, otherwise calculate
+            pnl: h.pnl !== undefined ? h.pnl : (hasRealPrice ? currentValue - investedValue : 0),
             pnlPercent: periodReturn,
             hasRealPrice,
             weight: 0,
