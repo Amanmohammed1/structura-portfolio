@@ -1,9 +1,94 @@
 /**
  * Rebalancing Suggestions Engine
  * Compares current portfolio to optimal HRP allocation
+ * Citadel Perspective: Focus on ₹ amounts and risk metrics
  */
 
 import { getAssetName } from '../../data/assetUniverse';
+
+/**
+ * Calculate Diversification Ratio
+ * DR = (Weighted avg volatility) / (Portfolio volatility)
+ * Higher is better - means risk is being diversified efficiently
+ * @param {number[]} weights - Portfolio weights
+ * @param {number[][]} covMatrix - Covariance matrix
+ * @returns {number} - Diversification ratio (typically 1.0 - 2.5)
+ */
+export function calculateDiversificationRatio(weights, covMatrix) {
+    if (!weights || !covMatrix || weights.length === 0) return 1;
+
+    const n = weights.length;
+
+    // Get individual volatilities (sqrt of diagonal)
+    const vols = [];
+    for (let i = 0; i < n; i++) {
+        vols.push(Math.sqrt(covMatrix[i][i]));
+    }
+
+    // Weighted average volatility
+    let weightedAvgVol = 0;
+    for (let i = 0; i < n; i++) {
+        weightedAvgVol += weights[i] * vols[i];
+    }
+
+    // Portfolio volatility (w' * Cov * w)^0.5
+    let portVar = 0;
+    for (let i = 0; i < n; i++) {
+        for (let j = 0; j < n; j++) {
+            portVar += weights[i] * weights[j] * covMatrix[i][j];
+        }
+    }
+    const portVol = Math.sqrt(portVar);
+
+    if (portVol === 0) return 1;
+
+    return weightedAvgVol / portVol;
+}
+
+/**
+ * Generate rebalancing suggestions with ₹ amounts (Citadel style)
+ * @param {Object[]} currentHoldings - Current portfolio with weights and currentValue
+ * @param {Object[]} optimalWeights - HRP optimal weights  
+ * @param {number} totalPortfolioValue - Total portfolio value in ₹
+ * @param {number} threshold - Minimum difference to trigger suggestion (default 3%)
+ */
+export function generateRebalancingWithAmounts(currentHoldings, optimalWeights, totalPortfolioValue, threshold = 3) {
+    const currentMap = new Map(currentHoldings.map(h => [h.symbol, {
+        weight: h.weight || 0,
+        value: h.currentValue || 0,
+        name: h.name || h.tradingSymbol || h.symbol
+    }]));
+    const optimalMap = new Map(optimalWeights.map(w => [w.symbol, w.weight * 100]));
+
+    const suggestions = [];
+    const allSymbols = new Set([...currentMap.keys(), ...optimalMap.keys()]);
+
+    allSymbols.forEach(symbol => {
+        const current = currentMap.get(symbol) || { weight: 0, value: 0, name: symbol };
+        const optimalWeight = optimalMap.get(symbol) || 0;
+        const diff = optimalWeight - current.weight;
+
+        if (Math.abs(diff) >= threshold) {
+            const tradeAmount = (diff / 100) * totalPortfolioValue;
+
+            suggestions.push({
+                symbol,
+                name: current.name || getAssetName(symbol),
+                currentWeight: current.weight,
+                currentValue: current.value,
+                optimalWeight: optimalWeight,
+                difference: diff,
+                tradeAmount: tradeAmount,  // NEW: ₹ amount to trade
+                tradeAmountFormatted: `₹${Math.abs(tradeAmount).toLocaleString('en-IN', { maximumFractionDigits: 0 })}`,
+                action: diff > 0 ? 'BUY' : 'SELL',
+                priority: Math.abs(diff) >= 10 ? 'high' : Math.abs(diff) >= 5 ? 'medium' : 'low',
+            });
+        }
+    });
+
+    // Sort by absolute trade amount (biggest trades first)
+    return suggestions.sort((a, b) => Math.abs(b.tradeAmount) - Math.abs(a.tradeAmount));
+}
 
 /**
  * Generate rebalancing suggestions
