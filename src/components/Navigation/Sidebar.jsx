@@ -14,6 +14,7 @@ import {
     TipIcon,
     StructureIcon
 } from '../Icons';
+import WalletWidget from './WalletWidget';
 import './Sidebar.css';
 
 // Logout icon (not in main library)
@@ -130,6 +131,9 @@ export function Sidebar() {
                         })}
                     </div>
                 </nav>
+
+                {/* Wallet Widget - Portfolio Quick View */}
+                <WalletWidget />
 
                 <div className="sidebar-footer">
                     <div className="user-info">

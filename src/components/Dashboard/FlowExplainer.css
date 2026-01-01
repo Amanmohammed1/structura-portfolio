@@ -1,0 +1,208 @@
+/**
+ * Flow Explainer Styles
+ * Premium dark theme with step-by-step cards
+ */
+
+.flow-explainer {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.explainer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.explainer-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35rem 0.75rem;
+    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #000;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.explainer-dismiss {
+    background: transparent;
+    border: 1px solid var(--glass-border);
+    color: var(--text-secondary);
+    padding: 0.35rem 0.75rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.explainer-dismiss:hover {
+    background: var(--accent-green);
+    color: #000;
+    border-color: var(--accent-green);
+}
+
+.explainer-content {
+    text-align: center;
+    padding: 1rem 0;
+}
+
+.explainer-icon {
+    font-size: 3rem;
+    margin-bottom: 0.75rem;
+}
+
+.explainer-step-label {
+    font-size: 0.7rem;
+    color: var(--accent-cyan);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+}
+
+.explainer-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 0.75rem 0;
+}
+
+.explainer-description {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin: 0 0 0.5rem 0;
+    line-height: 1.5;
+}
+
+.explainer-detail {
+    font-size: 0.85rem;
+    color: var(--text-tertiary);
+    font-style: italic;
+    margin: 0;
+}
+
+.explainer-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--glass-border);
+}
+
+.explainer-dots {
+    display: flex;
+    gap: 0.4rem;
+}
+
+.explainer-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--glass-border);
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.explainer-dot.active {
+    background: var(--accent-cyan);
+    width: 24px;
+    border-radius: 4px;
+}
+
+.explainer-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.explainer-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: transparent;
+    border: 1px solid var(--glass-border);
+    color: var(--text-secondary);
+}
+
+.explainer-btn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+}
+
+.explainer-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.explainer-btn.primary {
+    background: var(--accent-cyan);
+    border-color: var(--accent-cyan);
+    color: #000;
+}
+
+.explainer-btn.primary:hover {
+    background: var(--accent-green);
+    border-color: var(--accent-green);
+}
+
+.explainer-insight {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+    padding: 1rem;
+    background: rgba(0, 255, 200, 0.05);
+    border: 1px solid rgba(0, 255, 200, 0.2);
+    border-radius: 12px;
+}
+
+.insight-icon {
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.insight-text {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.insight-text strong {
+    color: var(--accent-green);
+}
+
+.insight-text em {
+    color: var(--accent-cyan);
+    font-style: normal;
+    font-weight: 500;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .flow-explainer {
+        padding: 1rem;
+    }
+
+    .explainer-nav {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .explainer-buttons {
+        width: 100%;
+    }
+
+    .explainer-btn {
+        flex: 1;
+    }
+}

@@ -38,6 +38,7 @@ import {
     NeonText,
     SparkLine
 } from '../components/PremiumUI';
+import FlowExplainer from '../components/Dashboard/FlowExplainer';
 import '../components/Dashboard/Dashboard.css';
 
 
@@ -48,6 +49,11 @@ export function DashboardPage() {
 
     const [showImport, setShowImport] = useState(false);
     const [showAllHoldings, setShowAllHoldings] = useState(false);
+    const [showExplainer, setShowExplainer] = useState(() => {
+        // Show explainer if user hasn't seen it before
+        const hasSeen = localStorage.getItem('structura_explainer_seen');
+        return !hasSeen;
+    });
 
     // Load persisted state from localStorage
     const [portfolio, setPortfolio] = useState(() => {
@@ -406,6 +412,16 @@ export function DashboardPage() {
 
             {portfolio && !result && !isLoading && (
                 <div className="portfolio-overview">
+                    {/* Flow Explainer - Shows how Structura works */}
+                    {showExplainer && (
+                        <FlowExplainer
+                            onDismiss={() => {
+                                setShowExplainer(false);
+                                localStorage.setItem('structura_explainer_seen', 'true');
+                            }}
+                        />
+                    )}
+
                     <header className="main-header">
                         <h2>{portfolio.name}</h2>
                         {portfolioTotals && (
