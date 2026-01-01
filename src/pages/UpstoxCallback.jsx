@@ -32,37 +32,25 @@ export function UpstoxCallbackPage() {
             try {
                 setStatus('Exchanging token...');
 
-                // Use Vercel API route for token exchange (server-side, Vercel IPs)
-                const tokenResponse = await fetch('/api/upstox-token', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ code })
+                // Exchange code for access token via Edge Function
+                const { data: tokenData, error: tokenError } = await supabase.functions.invoke('upstox-auth', {
+                    body: { action: 'exchange_token', code }
                 });
 
-                const tokenData = await tokenResponse.json();
-
-                if (!tokenData.access_token) {
-                    console.error('Token exchange failed:', tokenData);
-                    throw new Error(tokenData.error || tokenData.details?.errors?.[0]?.message || 'Token exchange failed');
+                if (tokenError || !tokenData?.access_token) {
+                    console.error('Token exchange failed:', tokenData, tokenError);
+                    throw new Error(tokenData?.error || 'Token exchange failed');
                 }
 
                 setStatus('Fetching your holdings...');
 
-                // Fetch holdings via Vercel API route
-                const holdingsResponse = await fetch('/api/upstox-holdings', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ accessToken: tokenData.access_token })
+                // Fetch holdings via Edge Function
+                const { data: holdingsData, error: holdingsError } = await supabase.functions.invoke('upstox-auth', {
+                    body: { action: 'get_holdings', accessToken: tokenData.access_token }
                 });
 
-                const holdingsData = await holdingsResponse.json();
-
-                if (!holdingsData.holdings) {
-                    throw new Error(holdingsData.error || 'Failed to fetch holdings');
+                if (holdingsError || !holdingsData?.holdings) {
+                    throw new Error(holdingsData?.error || 'Failed to fetch holdings');
                 }
 
                 // Store in localStorage for import

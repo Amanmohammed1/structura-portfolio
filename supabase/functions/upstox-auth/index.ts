@@ -78,8 +78,8 @@ serve(async (req) => {
                 method: 'POST',
                 headers: {
                     'accept': 'application/json',
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'User-Agent': 'curl/7.88.1'
+                    'Api-Version': '2.0',
+                    'Content-Type': 'application/x-www-form-urlencoded'
                 },
                 body: bodyString
             })
