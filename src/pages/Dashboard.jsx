@@ -20,7 +20,7 @@ import {
 } from '../lib/analytics/rebalancing';
 import { enrichPortfolio, calculateWeights } from '../data/demoPortfolios';
 import { getAssetName } from '../data/assetUniverse';
-import { ProfessorGuide } from '../components/Guide';
+import { ProfessorGuide, AnimatedProfessor, ProfessorToggle } from '../components/Guide';
 import {
     ImportIcon,
     AnalyzeIcon,
@@ -49,6 +49,7 @@ export function DashboardPage() {
 
     const [showImport, setShowImport] = useState(false);
     const [showAllHoldings, setShowAllHoldings] = useState(false);
+    const [showProfessor, setShowProfessor] = useState(false);
     const [showExplainer, setShowExplainer] = useState(() => {
         // Show explainer if user hasn't seen it before
         const hasSeen = localStorage.getItem('structura_explainer_seen');
@@ -599,11 +600,15 @@ export function DashboardPage() {
                 />
             )}
 
-            {/* Professor Guide - context-aware helper */}
-            <ProfessorGuide
-                page="dashboard"
-                state={isLoading ? 'analyzing' : result ? 'complete' : 'idle'}
-            />
+            {/* Professor Guide - Interactive animated guide */}
+            {showProfessor ? (
+                <AnimatedProfessor
+                    page="dashboard"
+                    onDismiss={() => setShowProfessor(false)}
+                />
+            ) : (
+                <ProfessorToggle onClick={() => setShowProfessor(true)} />
+            )}
         </div>
     );
 }

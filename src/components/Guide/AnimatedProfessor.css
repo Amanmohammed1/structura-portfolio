@@ -1,0 +1,324 @@
+/**
+ * Animated Professor Styles
+ * Rick & Morty style animated guide
+ */
+
+/* Main container */
+.animated-professor {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 9999;
+    opacity: 0;
+    transform: translateY(50px) scale(0.8);
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.animated-professor.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+/* Professor wrapper */
+.professor-wrapper {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.5rem;
+}
+
+/* Professor character */
+.professor-character {
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+    transition: transform 0.3s ease;
+}
+
+.professor-character:hover {
+    transform: scale(1.05);
+}
+
+/* Pupil animation - looking around */
+.professor-character .pupil {
+    animation: look-around 4s ease-in-out infinite;
+}
+
+.professor-character .pupil.right {
+    animation-delay: 0.1s;
+}
+
+@keyframes look-around {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(3px);
+    }
+
+    75% {
+        transform: translateX(-3px);
+    }
+}
+
+/* Speaking animation */
+.professor-character.speaking .mouth {
+    animation: speak 0.15s ease-in-out infinite alternate;
+}
+
+@keyframes speak {
+    from {
+        ry: 4;
+    }
+
+    to {
+        ry: 10;
+    }
+}
+
+/* Pointing arm animation */
+.professor-character .pointing-arm {
+    animation: point 0.8s ease-out forwards;
+    transform-origin: 95px 100px;
+}
+
+.professor-character .pointing-arm.right {
+    transform: scaleX(1);
+}
+
+.professor-character .pointing-arm.left {
+    transform: scaleX(-1);
+}
+
+@keyframes point {
+    0% {
+        opacity: 0;
+        transform: rotate(-30deg);
+    }
+
+    100% {
+        opacity: 1;
+        transform: rotate(0deg);
+    }
+}
+
+/* Speech bubble */
+.professor-speech-bubble {
+    background: rgba(20, 20, 30, 0.95);
+    border: 2px solid var(--accent-cyan);
+    border-radius: 16px;
+    padding: 1rem 1.25rem;
+    max-width: 320px;
+    position: relative;
+    animation: bubble-in 0.3s ease-out;
+    box-shadow:
+        0 0 20px rgba(0, 255, 200, 0.2),
+        0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* Speech bubble tail */
+.professor-speech-bubble::before {
+    content: '';
+    position: absolute;
+    left: -12px;
+    bottom: 20px;
+    width: 0;
+    height: 0;
+    border: 10px solid transparent;
+    border-right-color: var(--accent-cyan);
+}
+
+.professor-speech-bubble::after {
+    content: '';
+    position: absolute;
+    left: -8px;
+    bottom: 22px;
+    width: 0;
+    height: 0;
+    border: 8px solid transparent;
+    border-right-color: rgba(20, 20, 30, 0.95);
+}
+
+@keyframes bubble-in {
+    from {
+        opacity: 0;
+        transform: scale(0.8) translateX(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateX(0);
+    }
+}
+
+/* Speech content */
+.speech-content {
+    margin-bottom: 0.75rem;
+}
+
+.speech-message {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 0.5rem 0;
+    line-height: 1.4;
+}
+
+.speech-detail {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Speech actions */
+.speech-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+}
+
+.speech-btn {
+    padding: 0.4rem 0.8rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+}
+
+.speech-btn.dismiss {
+    background: transparent;
+    color: var(--text-tertiary);
+}
+
+.speech-btn.dismiss:hover {
+    color: var(--text-primary);
+}
+
+.speech-btn.next {
+    background: var(--accent-cyan);
+    color: #000;
+}
+
+.speech-btn.next:hover {
+    background: var(--accent-green);
+}
+
+/* Step dots */
+.professor-steps {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    margin-top: 0.75rem;
+    padding-left: 130px;
+    /* Offset for character width */
+}
+
+.step-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transition: all 0.2s ease;
+}
+
+.step-dot.active {
+    background: var(--accent-cyan);
+    width: 20px;
+    border-radius: 4px;
+}
+
+.step-dot.done {
+    background: var(--accent-green);
+}
+
+/* Highlighted element */
+.professor-highlight {
+    position: relative;
+    z-index: 9998;
+    outline: 3px solid var(--accent-cyan) !important;
+    outline-offset: 4px;
+    animation: highlight-pulse 1.5s ease-in-out infinite;
+    border-radius: 8px;
+}
+
+@keyframes highlight-pulse {
+
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(0, 255, 200, 0.4);
+    }
+
+    50% {
+        box-shadow: 0 0 20px 10px rgba(0, 255, 200, 0.2);
+    }
+}
+
+/* Professor toggle button */
+.professor-toggle {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 9990;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+    border: none;
+    border-radius: 20px;
+    color: #000;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0, 255, 200, 0.3);
+}
+
+.professor-toggle:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 28px rgba(0, 255, 200, 0.5);
+}
+
+.toggle-icon {
+    font-size: 1.2rem;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .animated-professor {
+        bottom: 10px;
+        left: 10px;
+        right: 10px;
+    }
+
+    .professor-wrapper {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .professor-character {
+        width: 80px;
+        height: 100px;
+    }
+
+    .professor-speech-bubble {
+        max-width: 100%;
+    }
+
+    .professor-speech-bubble::before,
+    .professor-speech-bubble::after {
+        display: none;
+    }
+
+    .professor-steps {
+        padding-left: 0;
+    }
+
+    .professor-toggle {
+        right: 20px;
+        left: auto;
+    }
+}

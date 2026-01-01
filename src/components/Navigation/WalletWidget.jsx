@@ -81,7 +81,7 @@ export function WalletWidget() {
     }
 
     return (
-        <div className="wallet-widget" onClick={() => navigate('/portfolio')}>
+        <div className="wallet-widget" onClick={() => navigate('/')}>
             <div className="wallet-icon active">
                 <WalletIcon size={20} />
             </div>
