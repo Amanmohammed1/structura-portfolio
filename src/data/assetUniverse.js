@@ -79,7 +79,7 @@ export function getSector(symbol) {
 
 /**
  * Pre-fetch all sectors for a list of symbols
- * Uses database first, then Yahoo Finance as fallback
+ * Uses database first, then Edge Function (Yahoo Finance) as fallback
  */
 export async function fetchSectorCache(symbols) {
     const tradingSymbols = symbols.map(s => s.replace('.NS', '').replace('.BSE', ''));
@@ -101,15 +101,23 @@ export async function fetchSectorCache(symbols) {
         const foundSymbols = new Set(data?.map(d => d.trading_symbol) || []);
         const missingSymbols = tradingSymbols.filter(s => !foundSymbols.has(s));
 
-        // Step 3: Fetch missing sectors from Yahoo Finance
+        // Step 3: Fetch missing sectors via Edge Function (bypasses CORS)
         if (missingSymbols.length > 0) {
-            console.log(`Fetching sectors from Yahoo for: ${missingSymbols.join(', ')}`);
-            const yahooSectors = await fetchSectorsFromYahoo(missingSymbols);
+            console.log(`Fetching sectors from Edge Function for: ${missingSymbols.join(', ')}`);
+            try {
+                const { data: sectorData, error: sectorError } = await supabase.functions.invoke('fetch-sectors', {
+                    body: { symbols: missingSymbols }
+                });
 
-            // Add to cache
-            Object.entries(yahooSectors).forEach(([symbol, sector]) => {
-                sectorCache[symbol] = sector;
-            });
+                if (!sectorError && sectorData?.sectors) {
+                    Object.entries(sectorData.sectors).forEach(([symbol, sector]) => {
+                        sectorCache[symbol] = sector;
+                    });
+                    console.log('Sectors fetched:', sectorData.sectors);
+                }
+            } catch (edgeFnError) {
+                console.warn('Edge function failed, sectors will be Other:', edgeFnError);
+            }
         }
     } catch (err) {
         console.warn('fetchSectorCache error:', err.message);

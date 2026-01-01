@@ -158,6 +158,9 @@ export function PortfolioProvider({ children }) {
                     h.weight = totalValue > 0 ? (h.currentValue / totalValue) * 100 : 0;
                 });
 
+                // DEBUG: Log pnl values after enrichment
+                console.log('PortfolioContext pnl values:', enrichedHoldings.map(h => ({ symbol: h.symbol, pnl: h.pnl })));
+
                 // Store latest prices
                 const prices = {};
                 Object.entries(priceData).forEach(([sym, data]) => {
