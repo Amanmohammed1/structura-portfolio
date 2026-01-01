@@ -14,78 +14,9 @@
 import { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import { useAuth } from '../Auth';
 import { fetchMultipleStocks } from '../../lib/data/yahooFinance';
+import { fetchSectorCache, getSector } from '../../data/assetUniverse';
 
 const PortfolioContext = createContext(null);
-
-// Stock to sector mapping (from stock_master in future, for now calculated)
-async function getStockSectors(symbols) {
-    // In production, this comes from stock_master table
-    // For now, we'll use Yahoo Finance industry data
-    const sectorMap = {};
-
-    try {
-        // Try to fetch from stock_master
-        const { supabase } = await import('../../config/supabase');
-        const { data } = await supabase
-            .from('stock_master')
-            .select('symbol, sector')
-            .in('symbol', symbols);
-
-        if (data) {
-            data.forEach(row => {
-                sectorMap[row.symbol] = row.sector || 'Other';
-            });
-        }
-    } catch (err) {
-        console.warn('Could not fetch sectors from stock_master:', err.message);
-    }
-
-    // Fill missing with default
-    symbols.forEach(sym => {
-        if (!sectorMap[sym]) {
-            sectorMap[sym] = inferSectorFromSymbol(sym);
-        }
-    });
-
-    return sectorMap;
-}
-
-// Fallback sector inference from symbol (if stock_master doesn't have it)
-function inferSectorFromSymbol(symbol) {
-    const sym = symbol.replace('.NS', '').toUpperCase();
-
-    // Banks
-    if (['HDFCBANK', 'ICICIBANK', 'SBIN', 'KOTAKBANK', 'AXISBANK', 'INDUSINDBK', 'FEDERALBNK', 'BANDHANBNK', 'IDFCFIRSTB'].includes(sym)) return 'Banking';
-
-    // NBFCs
-    if (['BAJFINANCE', 'BAJAJFINSV', 'SHRIRAMFIN', 'MUTHOOTFIN', 'M&MFIN'].includes(sym)) return 'NBFC';
-
-    // IT
-    if (['TCS', 'INFY', 'WIPRO', 'HCLTECH', 'TECHM', 'LTIM', 'COFORGE', 'MPHASIS'].includes(sym)) return 'IT';
-
-    // Pharma
-    if (['SUNPHARMA', 'DRREDDY', 'CIPLA', 'DIVISLAB', 'APOLLOHOSP', 'BIOCON', 'LUPIN'].includes(sym)) return 'Pharma';
-
-    // Auto
-    if (['TATAMOTORS', 'MARUTI', 'M&M', 'HEROMOTOCO', 'BAJAJ-AUTO', 'EICHERMOT', 'ASHOKLEY'].includes(sym)) return 'Auto';
-
-    // FMCG
-    if (['HINDUNILVR', 'ITC', 'NESTLEIND', 'BRITANNIA', 'DABUR', 'MARICO', 'COLPAL', 'GODREJCP', 'TATACONSUM'].includes(sym)) return 'FMCG';
-
-    // Energy/Oil
-    if (['RELIANCE', 'ONGC', 'NTPC', 'POWERGRID', 'ADANIGREEN', 'TATAPOWER', 'COALINDIA', 'IOC', 'BPCL', 'GAIL'].includes(sym)) return 'Energy';
-
-    // Metals
-    if (['TATASTEEL', 'JSWSTEEL', 'HINDALCO', 'VEDL', 'NMDC', 'SAIL'].includes(sym)) return 'Metals';
-
-    // Telecom
-    if (['BHARTIARTL', 'JIO', 'VODAFONEIDEA'].includes(sym)) return 'Telecom';
-
-    // Insurance
-    if (['HDFCLIFE', 'SBILIFE', 'ICICIPRULI'].includes(sym)) return 'Insurance';
-
-    return 'Other';
-}
 
 export function PortfolioProvider({ children }) {
     const { user } = useAuth();
@@ -118,9 +49,10 @@ export function PortfolioProvider({ children }) {
                 }
 
                 // Fetch current prices and sectors in parallel
-                const [priceData, sectorMap] = await Promise.all([
+                // Use shared fetchSectorCache which includes Yahoo Finance fallback
+                const [priceData] = await Promise.all([
                     fetchMultipleStocks(symbols, '1mo'),
-                    getStockSectors(symbols)
+                    fetchSectorCache(symbols) // Populates the sector cache
                 ]);
 
                 // Build holdings with current prices and sectors
@@ -142,7 +74,7 @@ export function PortfolioProvider({ children }) {
 
                     return {
                         ...h,
-                        sector: sectorMap[h.symbol] || h.sector || 'Other',
+                        sector: getSector(h.symbol) || h.sector || 'Other', // Use shared getSector
                         currentPrice,
                         currentValue,
                         avgBuyPrice,
