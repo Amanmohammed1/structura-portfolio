@@ -103,6 +103,9 @@ export function DashboardPage() {
                         sector: getSector(h.symbol),
                     }));
 
+                    // DEBUG: Log pnl values to verify they're preserved
+                    console.log('Upstox pnl values:', enrichedHoldings.map(h => ({ symbol: h.symbol, pnl: h.pnl })));
+
                     // Import the portfolio
                     setPortfolio({
                         name: 'Upstox Portfolio',

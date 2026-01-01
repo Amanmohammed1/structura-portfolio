@@ -285,27 +285,36 @@ export async function fetchSectorFromYahoo(symbol) {
 
 /**
  * Fetch sectors for multiple symbols from Yahoo Finance
+ * NOTE: May fail due to CORS when called from browser
  */
 export async function fetchSectorsFromYahoo(symbols) {
     const results = {};
 
-    // Fetch in parallel with rate limiting (max 5 concurrent)
-    const chunks = [];
-    for (let i = 0; i < symbols.length; i += 5) {
-        chunks.push(symbols.slice(i, i + 5));
-    }
-
-    for (const chunk of chunks) {
-        const promises = chunk.map(async (symbol) => {
-            const sector = await fetchSectorFromYahoo(symbol);
-            results[symbol.replace('.NS', '').replace('.BSE', '')] = sector || 'Other';
-        });
-        await Promise.all(promises);
-
-        // Small delay between chunks to avoid rate limiting
-        if (chunks.indexOf(chunk) < chunks.length - 1) {
-            await new Promise(r => setTimeout(r, 200));
+    try {
+        // Fetch in parallel with rate limiting (max 5 concurrent)
+        const chunks = [];
+        for (let i = 0; i < symbols.length; i += 5) {
+            chunks.push(symbols.slice(i, i + 5));
         }
+
+        for (const chunk of chunks) {
+            const promises = chunk.map(async (symbol) => {
+                try {
+                    const sector = await fetchSectorFromYahoo(symbol);
+                    results[symbol.replace('.NS', '').replace('.BSE', '')] = sector || 'Other';
+                } catch (e) {
+                    results[symbol.replace('.NS', '').replace('.BSE', '')] = 'Other';
+                }
+            });
+            await Promise.all(promises);
+
+            // Small delay between chunks
+            if (chunks.indexOf(chunk) < chunks.length - 1) {
+                await new Promise(r => setTimeout(r, 200));
+            }
+        }
+    } catch (err) {
+        console.warn('Yahoo sector fetch failed (likely CORS):', err.message);
     }
 
     return results;
