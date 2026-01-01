@@ -114,6 +114,7 @@ export function DashboardPage() {
                     });
 
                     // Save to main storage
+                    console.log('UPSTOX HANDLER - SAVING to localStorage:', enrichedHoldings.map(h => ({ symbol: h.symbol, pnl: h.pnl })));
                     localStorage.setItem('structura_portfolio', JSON.stringify(enrichedHoldings));
                     localStorage.setItem('structura_portfolio_meta', JSON.stringify({
                         name: 'Upstox Portfolio',
