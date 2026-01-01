@@ -19,7 +19,7 @@ const WalletIcon = ({ size = 18 }) => (
 
 export function WalletWidget() {
     const navigate = useNavigate();
-    const [portfolio, setPortfolio] = useState(null);
+    const [holdings, setHoldings] = useState([]);
 
     useEffect(() => {
         // Load portfolio from localStorage
@@ -28,12 +28,14 @@ export function WalletWidget() {
             if (stored) {
                 try {
                     const parsed = JSON.parse(stored);
-                    setPortfolio(parsed);
+                    // structura_portfolio stores the holdings array directly
+                    setHoldings(Array.isArray(parsed) ? parsed : parsed.holdings || []);
                 } catch (e) {
                     console.error('Error parsing portfolio:', e);
+                    setHoldings([]);
                 }
             } else {
-                setPortfolio(null);
+                setHoldings([]);
             }
         };
 
@@ -46,19 +48,25 @@ export function WalletWidget() {
         // Also listen for custom event
         window.addEventListener('portfolio-updated', handleStorage);
 
+        // Reload on visibility change (when returning to tab)
+        const handleVisibility = () => {
+            if (!document.hidden) loadPortfolio();
+        };
+        document.addEventListener('visibilitychange', handleVisibility);
+
         return () => {
             window.removeEventListener('storage', handleStorage);
             window.removeEventListener('portfolio-updated', handleStorage);
+            document.removeEventListener('visibilitychange', handleVisibility);
         };
     }, []);
 
     // Calculate totals
-    const holdings = portfolio?.holdings || [];
     const totalValue = holdings.reduce((sum, h) => sum + (h.currentValue || h.quantity * h.currentPrice || 0), 0);
     const stockCount = holdings.length;
 
     // No portfolio - show "Import" prompt
-    if (!portfolio || stockCount === 0) {
+    if (stockCount === 0) {
         return (
             <div className="wallet-widget wallet-empty" onClick={() => navigate('/')}>
                 <div className="wallet-icon">

@@ -174,7 +174,7 @@ export function MyPortfolioPage() {
             <div className="my-portfolio-page">
                 <header className="portfolio-header">
                     <h1><PortfolioIcon size={28} /> My Portfolio</h1>
-                    <p>Track your actual returns</p>
+                    <p>View your current holdings</p>
                 </header>
                 <div className="empty-state">
                     <div className="empty-icon"><PortfolioIcon size={48} /></div>
@@ -190,7 +190,7 @@ export function MyPortfolioPage() {
         <div className="my-portfolio-page">
             <header className="portfolio-header">
                 <h1><PortfolioIcon size={28} /> My Portfolio</h1>
-                <p>Track your actual returns & simulate rebalancing</p>
+                <p>Your current holdings & market exposure</p>
             </header>
 
             {/* Portfolio Summary Cards */}

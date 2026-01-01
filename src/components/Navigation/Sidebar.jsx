@@ -44,10 +44,10 @@ const CloseIcon = ({ size = 24 }) => (
 );
 
 const NAV_ITEMS = [
-    { path: '/', icon: ChartIcon, label: 'Dashboard', description: 'Overview & Optimize' },
-    { path: '/portfolio', icon: PortfolioIcon, label: 'My Portfolio', description: 'Track Actual P&L' },
+    { path: '/', icon: ChartIcon, label: 'Dashboard', description: 'Structure Optimizer' },
+    { path: '/portfolio', icon: PortfolioIcon, label: 'My Portfolio', description: 'Current Holdings' },
     { path: '/risk', icon: RiskIcon, label: 'Risk Analysis', description: 'Stress Tests & VaR' },
-    { path: '/advisor', icon: TipIcon, label: 'Next Investment', description: 'AI Recommendations' },
+    { path: '/advisor', icon: TipIcon, label: 'Next Investment', description: 'Gap Analysis' },
 ];
 
 export function Sidebar() {
