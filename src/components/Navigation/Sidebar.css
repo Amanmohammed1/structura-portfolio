@@ -199,6 +199,34 @@
     background: rgba(239, 68, 68, 0.15);
 }
 
+/* Ask Rick Button */
+.ask-rick-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 0.75rem 1rem;
+    padding: 0.6rem 1rem;
+    background: linear-gradient(135deg, #87CEEB, #B8D4E3);
+    border: 2px solid #ADD8E6;
+    border-radius: 12px;
+    color: #1a1a2e;
+    font-weight: 600;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 12px rgba(135, 206, 235, 0.3);
+}
+
+.ask-rick-btn:hover {
+    transform: scale(1.03);
+    box-shadow: 0 4px 20px rgba(135, 206, 235, 0.5);
+}
+
+.rick-icon {
+    font-size: 1.1rem;
+}
+
 /* Scrollbar */
 .sidebar-nav::-webkit-scrollbar {
     width: 4px;
@@ -212,6 +240,7 @@
     background: rgba(99, 102, 241, 0.3);
     border-radius: 2px;
 }
+
 
 /* Responsive */
 @media (max-width: 1024px) {

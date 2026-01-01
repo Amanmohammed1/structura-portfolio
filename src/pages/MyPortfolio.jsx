@@ -10,7 +10,7 @@
 import { useState, useMemo } from 'react';
 import { usePortfolio } from '../components/Portfolio';
 import { getAssetName } from '../data/assetUniverse';
-import { ProfessorGuide } from '../components/Guide';
+import { AnimatedProfessor, ProfessorToggle } from '../components/Guide';
 import { PortfolioIcon } from '../components/Icons';
 import '../components/Dashboard/Dashboard.css';
 import './MyPortfolio.css';
@@ -58,6 +58,7 @@ const SIMULATION_MODES = [
 export function MyPortfolioPage() {
     const { holdings, portfolioStats, loading, hasPortfolio } = usePortfolio();
     const [simulationMode, setSimulationMode] = useState('current');
+    const [showProfessor, setShowProfessor] = useState(false);
 
     // Calculate portfolio with simulation
     const { enrichedHoldings, totals, simulation } = useMemo(() => {
@@ -357,12 +358,15 @@ export function MyPortfolioPage() {
                 )}
             </div>
 
-            {/* Professor Guide */}
-            <ProfessorGuide
-                page="portfolio"
-                state="idle"
-                weightMode={simulationMode}
-            />
+            {/* Professor Guide - Interactive Rick */}
+            {showProfessor ? (
+                <AnimatedProfessor
+                    page="portfolio"
+                    onDismiss={() => setShowProfessor(false)}
+                />
+            ) : (
+                <ProfessorToggle onClick={() => setShowProfessor(true)} />
+            )}
         </div>
     );
 }

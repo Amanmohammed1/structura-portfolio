@@ -1,48 +1,59 @@
 /**
- * Animated Professor Styles
- * Rick & Morty style animated guide
+ * Rick Professor Styles
+ * Animated movement and speech bubble
  */
 
-/* Main container */
-.animated-professor {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    z-index: 9999;
-    opacity: 0;
-    transform: translateY(50px) scale(0.8);
-    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.animated-professor.visible {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-}
-
-/* Professor wrapper */
-.professor-wrapper {
+/* Rick character - smaller and movable */
+.rick-professor {
     display: flex;
-    align-items: flex-end;
-    gap: 0.5rem;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: auto;
 }
 
-/* Professor character */
-.professor-character {
-    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
-    transition: transform 0.3s ease;
+.rick-professor.moving {
+    animation: rick-move 0.4s ease-out;
 }
 
-.professor-character:hover {
-    transform: scale(1.05);
+@keyframes rick-move {
+    0% {
+        transform: scale(0.9);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }
 
-/* Pupil animation - looking around */
-.professor-character .pupil {
+/* Rick character SVG */
+.rick-character {
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
+    animation: rick-idle 3s ease-in-out infinite;
+}
+
+@keyframes rick-idle {
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    25% {
+        transform: translateY(-3px) rotate(-1deg);
+    }
+
+    75% {
+        transform: translateY(-3px) rotate(1deg);
+    }
+}
+
+/* Pupil movement */
+.rick-character .pupil {
     animation: look-around 4s ease-in-out infinite;
-}
-
-.professor-character .pupil.right {
-    animation-delay: 0.1s;
 }
 
 @keyframes look-around {
@@ -52,97 +63,69 @@
         transform: translateX(0);
     }
 
-    25% {
-        transform: translateX(3px);
+    30% {
+        transform: translateX(2px);
     }
 
-    75% {
-        transform: translateX(-3px);
+    70% {
+        transform: translateX(-2px);
     }
 }
 
-/* Speaking animation */
-.professor-character.speaking .mouth {
-    animation: speak 0.15s ease-in-out infinite alternate;
+/* Speaking mouth animation */
+.rick-character.speaking .mouth {
+    animation: talk 0.12s ease-in-out infinite alternate;
 }
 
-@keyframes speak {
+@keyframes talk {
     from {
-        ry: 4;
+        ry: 2;
     }
 
     to {
-        ry: 10;
-    }
-}
-
-/* Pointing arm animation */
-.professor-character .pointing-arm {
-    animation: point 0.8s ease-out forwards;
-    transform-origin: 95px 100px;
-}
-
-.professor-character .pointing-arm.right {
-    transform: scaleX(1);
-}
-
-.professor-character .pointing-arm.left {
-    transform: scaleX(-1);
-}
-
-@keyframes point {
-    0% {
-        opacity: 0;
-        transform: rotate(-30deg);
-    }
-
-    100% {
-        opacity: 1;
-        transform: rotate(0deg);
+        ry: 7;
     }
 }
 
 /* Speech bubble */
-.professor-speech-bubble {
-    background: rgba(20, 20, 30, 0.95);
+.rick-speech-bubble {
+    position: absolute;
+    left: 90px;
+    top: 0;
+    width: 280px;
+    background: rgba(15, 15, 25, 0.95);
     border: 2px solid var(--accent-cyan);
-    border-radius: 16px;
-    padding: 1rem 1.25rem;
-    max-width: 320px;
-    position: relative;
-    animation: bubble-in 0.3s ease-out;
+    border-radius: 12px;
+    padding: 1rem;
     box-shadow:
-        0 0 20px rgba(0, 255, 200, 0.2),
-        0 8px 32px rgba(0, 0, 0, 0.4);
+        0 0 30px rgba(0, 255, 200, 0.15),
+        0 8px 32px rgba(0, 0, 0, 0.5);
+    animation: bubble-pop 0.3s ease-out;
 }
 
 /* Speech bubble tail */
-.professor-speech-bubble::before {
+.rick-speech-bubble::before {
     content: '';
     position: absolute;
     left: -12px;
-    bottom: 20px;
-    width: 0;
-    height: 0;
-    border: 10px solid transparent;
+    top: 30px;
+    border: 8px solid transparent;
     border-right-color: var(--accent-cyan);
 }
 
-.professor-speech-bubble::after {
+.rick-speech-bubble::after {
     content: '';
     position: absolute;
     left: -8px;
-    bottom: 22px;
-    width: 0;
-    height: 0;
-    border: 8px solid transparent;
-    border-right-color: rgba(20, 20, 30, 0.95);
+    top: 32px;
+    border: 6px solid transparent;
+    border-right-color: rgba(15, 15, 25, 0.95);
 }
 
-@keyframes bubble-in {
+@keyframes bubble-pop {
     from {
         opacity: 0;
-        transform: scale(0.8) translateX(-20px);
+        transform: scale(0.8) translateX(-10px);
     }
 
     to {
@@ -151,113 +134,93 @@
     }
 }
 
-/* Speech content */
 .speech-content {
     margin-bottom: 0.75rem;
 }
 
-.speech-message {
-    font-size: 0.95rem;
+.speech-main {
+    font-size: 0.9rem;
     font-weight: 600;
     color: var(--text-primary);
-    margin: 0 0 0.5rem 0;
+    margin: 0 0 0.4rem 0;
     line-height: 1.4;
 }
 
 .speech-detail {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: var(--text-secondary);
     margin: 0;
     line-height: 1.5;
 }
 
-/* Speech actions */
-.speech-actions {
+.speech-buttons {
     display: flex;
-    gap: 0.5rem;
     justify-content: flex-end;
+    gap: 0.5rem;
 }
 
-.speech-btn {
-    padding: 0.4rem 0.8rem;
-    border-radius: 8px;
-    font-size: 0.8rem;
+.speech-buttons button {
+    padding: 0.35rem 0.7rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
     border: none;
 }
 
-.speech-btn.dismiss {
+.btn-skip {
     background: transparent;
     color: var(--text-tertiary);
 }
 
-.speech-btn.dismiss:hover {
+.btn-skip:hover {
     color: var(--text-primary);
 }
 
-.speech-btn.next {
+.btn-next {
     background: var(--accent-cyan);
     color: #000;
 }
 
-.speech-btn.next:hover {
+.btn-next:hover {
     background: var(--accent-green);
 }
 
-/* Step dots */
-.professor-steps {
-    display: flex;
-    gap: 6px;
-    justify-content: center;
-    margin-top: 0.75rem;
-    padding-left: 130px;
-    /* Offset for character width */
+/* Step indicator */
+.step-indicator {
+    font-size: 0.7rem;
+    color: var(--text-tertiary);
+    margin-top: 0.5rem;
+    text-align: center;
 }
 
-.step-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.2);
-    transition: all 0.2s ease;
-}
-
-.step-dot.active {
-    background: var(--accent-cyan);
-    width: 20px;
-    border-radius: 4px;
-}
-
-.step-dot.done {
-    background: var(--accent-green);
-}
-
-/* Highlighted element */
-.professor-highlight {
+/* Highlighted element - pulsing glow */
+.rick-highlight {
     position: relative;
-    z-index: 9998;
+    z-index: 9999 !important;
     outline: 3px solid var(--accent-cyan) !important;
-    outline-offset: 4px;
-    animation: highlight-pulse 1.5s ease-in-out infinite;
+    outline-offset: 6px !important;
+    animation: rick-glow 1.5s ease-in-out infinite;
     border-radius: 8px;
 }
 
-@keyframes highlight-pulse {
+@keyframes rick-glow {
 
     0%,
     100% {
         box-shadow: 0 0 0 0 rgba(0, 255, 200, 0.4);
+        outline-color: var(--accent-cyan);
     }
 
     50% {
-        box-shadow: 0 0 20px 10px rgba(0, 255, 200, 0.2);
+        box-shadow: 0 0 30px 15px rgba(0, 255, 200, 0.15);
+        outline-color: var(--accent-green);
     }
 }
 
-/* Professor toggle button */
-.professor-toggle {
+/* Toggle button */
+.rick-toggle {
     position: fixed;
     bottom: 20px;
     left: 20px;
@@ -266,59 +229,50 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.6rem 1rem;
-    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
-    border: none;
-    border-radius: 20px;
-    color: #000;
-    font-weight: 600;
+    background: linear-gradient(135deg, #87CEEB, #B8D4E3);
+    border: 2px solid #ADD8E6;
+    border-radius: 25px;
+    color: #1a1a2e;
+    font-weight: 700;
     font-size: 0.85rem;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 20px rgba(0, 255, 200, 0.3);
+    box-shadow: 0 4px 20px rgba(135, 206, 235, 0.4);
 }
 
-.professor-toggle:hover {
-    transform: scale(1.05);
-    box-shadow: 0 6px 28px rgba(0, 255, 200, 0.5);
+.rick-toggle:hover {
+    transform: scale(1.08) rotate(-2deg);
+    box-shadow: 0 6px 28px rgba(135, 206, 235, 0.6);
 }
 
-.toggle-icon {
-    font-size: 1.2rem;
+.rick-emoji {
+    font-size: 1.3rem;
 }
 
 /* Mobile responsive */
 @media (max-width: 768px) {
-    .animated-professor {
-        bottom: 10px;
+    .rick-professor {
+        left: 10px !important;
+        bottom: 10px !important;
+        top: auto !important;
+    }
+
+    .rick-speech-bubble {
+        position: fixed;
         left: 10px;
         right: 10px;
+        bottom: 110px;
+        top: auto;
+        width: auto;
     }
 
-    .professor-wrapper {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .professor-character {
-        width: 80px;
-        height: 100px;
-    }
-
-    .professor-speech-bubble {
-        max-width: 100%;
-    }
-
-    .professor-speech-bubble::before,
-    .professor-speech-bubble::after {
+    .rick-speech-bubble::before,
+    .rick-speech-bubble::after {
         display: none;
     }
 
-    .professor-steps {
-        padding-left: 0;
-    }
-
-    .professor-toggle {
-        right: 20px;
-        left: auto;
+    .rick-character {
+        width: 60px;
+        height: 72px;
     }
 }
