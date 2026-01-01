@@ -4,6 +4,7 @@
  */
 
 import { supabase } from '../config/supabase';
+import { fetchSectorsFromYahoo } from '../lib/data/yahooFinance';
 
 // Cache for fetched data
 let sectorCache = {};
@@ -78,11 +79,13 @@ export function getSector(symbol) {
 
 /**
  * Pre-fetch all sectors for a list of symbols
+ * Uses database first, then Yahoo Finance as fallback
  */
 export async function fetchSectorCache(symbols) {
     const tradingSymbols = symbols.map(s => s.replace('.NS', '').replace('.BSE', ''));
 
     try {
+        // Step 1: Try to get from database
         const { data, error } = await supabase
             .from('stock_master')
             .select('trading_symbol, sector')
@@ -93,10 +96,26 @@ export async function fetchSectorCache(symbols) {
                 sectorCache[row.trading_symbol] = row.sector;
             });
         }
+
+        // Step 2: Find symbols not in database
+        const foundSymbols = new Set(data?.map(d => d.trading_symbol) || []);
+        const missingSymbols = tradingSymbols.filter(s => !foundSymbols.has(s));
+
+        // Step 3: Fetch missing sectors from Yahoo Finance
+        if (missingSymbols.length > 0) {
+            console.log(`Fetching sectors from Yahoo for: ${missingSymbols.join(', ')}`);
+            const yahooSectors = await fetchSectorsFromYahoo(missingSymbols);
+
+            // Add to cache
+            Object.entries(yahooSectors).forEach(([symbol, sector]) => {
+                sectorCache[symbol] = sector;
+            });
+        }
     } catch (err) {
         console.warn('fetchSectorCache error:', err.message);
     }
 }
+
 
 /**
  * Fetch index components FROM DATABASE

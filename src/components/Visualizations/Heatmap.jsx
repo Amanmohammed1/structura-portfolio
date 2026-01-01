@@ -60,17 +60,20 @@ export function Heatmap({
 
         // Add hover interactions
         cells
+            .attr('title', d => `${orderedSymbols[d.i]} × ${orderedSymbols[d.j]}: ${d.value.toFixed(3)}`)
             .on('mouseenter', function (event, d) {
                 d3.select(this)
                     .attr('stroke', 'var(--accent-yellow)')
                     .attr('stroke-width', 2);
 
-                const tooltip = d3.select('.heatmap-tooltip');
+                // Use container-scoped tooltip
+                const container = d3.select(svgRef.current.parentNode);
+                const tooltip = container.select('.heatmap-tooltip');
                 if (!tooltip.empty()) {
                     tooltip
                         .style('opacity', 1)
-                        .style('left', `${event.pageX + 10}px`)
-                        .style('top', `${event.pageY - 10}px`)
+                        .style('left', `${event.clientX + 15}px`)
+                        .style('top', `${event.clientY - 10}px`)
                         .html(`
               <strong>${orderedSymbols[d.i]} × ${orderedSymbols[d.j]}</strong>
               <br/>Correlation: <span class="${d.value > 0 ? 'positive' : 'negative'}">${d.value.toFixed(3)}</span>
@@ -81,7 +84,8 @@ export function Heatmap({
                 d3.select(this)
                     .attr('stroke', 'none');
 
-                d3.select('.heatmap-tooltip').style('opacity', 0);
+                const container = d3.select(svgRef.current.parentNode);
+                container.select('.heatmap-tooltip').style('opacity', 0);
             });
 
         // Add row labels (left)

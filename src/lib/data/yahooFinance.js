@@ -252,4 +252,63 @@ export function getYahooRange(r) {
     return { '1m': '1mo', '3m': '3mo', '6m': '6mo', '1y': '1y', '2y': '2y', '3y': '3y', '5y': '5y' }[r] || '1y';
 }
 
-export default { fetchMultipleStocks, getCurrentPrice, getYahooRange };
+/**
+ * Fetch sector from Yahoo Finance quoteSummary API
+ * Used as fallback when stock is not in our database
+ */
+export async function fetchSectorFromYahoo(symbol) {
+    // Ensure symbol has .NS suffix for Yahoo
+    const yahooSymbol = symbol.includes('.') ? symbol : `${symbol}.NS`;
+
+    const url = `https://query1.finance.yahoo.com/v10/finance/quoteSummary/${yahooSymbol}?modules=assetProfile`;
+
+    try {
+        const response = await fetch(url, {
+            headers: { 'User-Agent': 'Mozilla/5.0' }
+        });
+
+        if (!response.ok) return null;
+
+        const data = await response.json();
+        const profile = data?.quoteSummary?.result?.[0]?.assetProfile;
+
+        if (profile?.sector) {
+            return profile.sector;
+        }
+
+        return null;
+    } catch (err) {
+        console.error(`Yahoo sector fetch failed for ${symbol}:`, err);
+        return null;
+    }
+}
+
+/**
+ * Fetch sectors for multiple symbols from Yahoo Finance
+ */
+export async function fetchSectorsFromYahoo(symbols) {
+    const results = {};
+
+    // Fetch in parallel with rate limiting (max 5 concurrent)
+    const chunks = [];
+    for (let i = 0; i < symbols.length; i += 5) {
+        chunks.push(symbols.slice(i, i + 5));
+    }
+
+    for (const chunk of chunks) {
+        const promises = chunk.map(async (symbol) => {
+            const sector = await fetchSectorFromYahoo(symbol);
+            results[symbol.replace('.NS', '').replace('.BSE', '')] = sector || 'Other';
+        });
+        await Promise.all(promises);
+
+        // Small delay between chunks to avoid rate limiting
+        if (chunks.indexOf(chunk) < chunks.length - 1) {
+            await new Promise(r => setTimeout(r, 200));
+        }
+    }
+
+    return results;
+}
+
+export default { fetchMultipleStocks, getCurrentPrice, getYahooRange, fetchSectorFromYahoo, fetchSectorsFromYahoo };
