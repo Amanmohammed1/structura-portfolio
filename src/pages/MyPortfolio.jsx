@@ -33,7 +33,7 @@ const formatPercent = (value) => {
     return `${sign}${value.toFixed(2)}%`;
 };
 
-// Simulation modes
+// Simulation modes - only show meaningful comparisons
 const SIMULATION_MODES = [
     {
         id: 'current',
@@ -42,15 +42,9 @@ const SIMULATION_MODES = [
         icon: '📊'
     },
     {
-        id: 'equal',
-        label: 'Simulate: Equal Weight',
-        description: 'Each stock gets equal ₹ value',
-        icon: '⚖️'
-    },
-    {
         id: 'hrp',
-        label: 'Simulate: HRP Optimal',
-        description: 'Risk-adjusted allocation',
+        label: 'HRP Optimal',
+        description: 'Risk-adjusted optimal allocation',
         icon: '🧠'
     },
 ];
@@ -73,7 +67,9 @@ export function MyPortfolioPage() {
         const currentHoldings = holdings.map(h => {
             const avgBuyPrice = h.avgPrice || h.avgBuyPrice || h.basePrice || (h.currentPrice * 0.9);
             const investedValue = h.quantity * avgBuyPrice;
-            const pnl = h.currentValue - investedValue;
+
+            // Use broker's P&L if available (Upstox sends this), otherwise calculate
+            const pnl = h.pnl !== undefined ? h.pnl : (h.currentValue - investedValue);
             const pnlPercent = investedValue > 0 ? (pnl / investedValue) * 100 : 0;
             const currentWeight = totalCurrentValue > 0 ? (h.currentValue / totalCurrentValue) * 100 : 0;
 
@@ -95,14 +91,8 @@ export function MyPortfolioPage() {
 
         if (simulationMode !== 'current') {
             simulatedHoldings = currentHoldings.map(h => {
-                // Target weight based on mode
-                let targetWeight;
-                if (simulationMode === 'equal') {
-                    targetWeight = 100 / n; // Equal weight = 1/n
-                } else {
-                    // HRP weight from Dashboard analysis, fallback to equal
-                    targetWeight = h.hrpWeight || (100 / n);
-                }
+                // HRP weight from Dashboard analysis, fallback to equal weight
+                const targetWeight = h.hrpWeight || (100 / n);
 
                 // Calculate target value and quantity
                 const targetValue = (targetWeight / 100) * totalCurrentValue;
