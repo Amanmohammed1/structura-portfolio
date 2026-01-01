@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getDemoPortfolioOptions, getDemoPortfolio, fetchDemoPortfolios } from '../../data/demoPortfolios';
-import { getSector } from '../../data/assetUniverse';
+import { getSector, fetchSectorCache } from '../../data/assetUniverse';
 import { supabase } from '../../config/supabase';
 import './Import.css';
 
@@ -110,10 +110,10 @@ export function PortfolioImport({ onImport, onClose }) {
         const file = e.target.files[0];
         if (!file) return;
         const reader = new FileReader();
-        reader.onload = (event) => {
+        reader.onload = async (event) => {
             try {
                 const text = event.target.result;
-                const holdings = parseCSV(text);
+                const holdings = await parseCSV(text);
                 if (holdings.length > 0) {
                     onImport({ name: 'Imported Portfolio', holdings, source: 'csv' });
                     onClose?.();
@@ -125,7 +125,7 @@ export function PortfolioImport({ onImport, onClose }) {
         reader.readAsText(file);
     };
 
-    const parseCSV = (text) => {
+    const parseCSV = async (text) => {
         const lines = text.trim().split('\n');
         if (lines.length < 2) throw new Error('No data rows found');
         const headers = lines[0].toLowerCase().split(',').map(h => h.trim());
@@ -133,18 +133,29 @@ export function PortfolioImport({ onImport, onClose }) {
         const qtyIdx = headers.findIndex(h => h.includes('qty') || h.includes('quantity'));
         const priceIdx = headers.findIndex(h => h.includes('price') || h.includes('avg'));
         if (symbolIdx === -1) throw new Error('Could not find symbol column');
-        return lines.slice(1).filter(l => l.trim()).map(line => {
+
+        // Parse holdings first
+        const parsed = lines.slice(1).filter(l => l.trim()).map(line => {
             const cols = line.split(',').map(c => c.trim().replace(/"/g, ''));
             let symbol = cols[symbolIdx]?.toUpperCase() || '';
             if (!symbol.includes('.NS')) symbol += '.NS';
             return {
                 symbol,
                 name: symbol.replace('.NS', ''),
-                sector: getSector(symbol),
                 quantity: parseFloat(cols[qtyIdx]) || 1,
                 avgPrice: parseFloat(cols[priceIdx]) || 1000,
             };
         });
+
+        // Fetch sectors from database
+        const symbols = parsed.map(h => h.symbol);
+        await fetchSectorCache(symbols);
+
+        // Now assign sectors from cache
+        return parsed.map(h => ({
+            ...h,
+            sector: getSector(h.symbol),
+        }));
     };
 
     const addRow = () => setManualHoldings([...manualHoldings, { symbol: '', quantity: '', avgPrice: '' }]);
@@ -170,20 +181,32 @@ export function PortfolioImport({ onImport, onClose }) {
         setSuggestions([]);
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         const valid = manualHoldings.filter(h => h.symbol.trim());
         if (valid.length === 0) { setError('Add at least one stock'); return; }
-        const holdings = valid.map(h => {
+
+        // Build holdings without sectors first
+        const parsed = valid.map(h => {
             let symbol = h.symbol.toUpperCase().trim();
             if (!symbol.includes('.NS')) symbol += '.NS';
             return {
                 symbol,
                 name: h.name || symbol.replace('.NS', ''),
-                sector: getSector(symbol),
                 quantity: parseFloat(h.quantity) || 1,
                 avgPrice: parseFloat(h.avgPrice) || 1000,
             };
         });
+
+        // Fetch sectors from database
+        const symbols = parsed.map(h => h.symbol);
+        await fetchSectorCache(symbols);
+
+        // Assign sectors from cache
+        const holdings = parsed.map(h => ({
+            ...h,
+            sector: getSector(h.symbol),
+        }));
+
         onImport({ name: 'My Portfolio', holdings, source: 'manual' });
         onClose?.();
     };
@@ -292,9 +315,18 @@ export function PortfolioImport({ onImport, onClose }) {
                                             if (fetchError || !data?.holdings) {
                                                 throw new Error(data?.error || 'Failed to fetch holdings');
                                             }
+
+                                            // Enrich with sectors from database
+                                            const symbols = data.holdings.map(h => h.symbol);
+                                            await fetchSectorCache(symbols);
+                                            const enrichedHoldings = data.holdings.map(h => ({
+                                                ...h,
+                                                sector: getSector(h.symbol),
+                                            }));
+
                                             onImport({
                                                 name: 'Upstox Portfolio',
-                                                holdings: data.holdings,
+                                                holdings: enrichedHoldings,
                                                 source: 'upstox'
                                             });
                                             if (onClose) onClose();
