@@ -15,7 +15,6 @@ import {
     StructureIcon
 } from '../Icons';
 import WalletWidget from './WalletWidget';
-import { AnimatedProfessor } from '../Guide';
 import './Sidebar.css';
 
 // Logout icon (not in main library)
@@ -55,16 +54,6 @@ export function Sidebar() {
     const { user, signOut } = useAuth();
     const location = useLocation();
     const [isOpen, setIsOpen] = useState(false);
-    const [showProfessor, setShowProfessor] = useState(false);
-
-    // Map route to page name for Professor
-    const getPageFromRoute = () => {
-        if (location.pathname === '/') return 'dashboard';
-        if (location.pathname === '/portfolio') return 'portfolio';
-        if (location.pathname === '/risk') return 'risk';
-        if (location.pathname === '/advisor') return 'advisor';
-        return 'dashboard';
-    };
 
     // Close sidebar when route changes (mobile)
     useEffect(() => {
@@ -145,23 +134,6 @@ export function Sidebar() {
 
                 {/* Wallet Widget - Portfolio Quick View */}
                 <WalletWidget />
-
-                {/* Ask Rick Button */}
-                <button
-                    className="ask-rick-btn"
-                    onClick={() => setShowProfessor(true)}
-                >
-                    <span className="rick-icon">🧪</span>
-                    <span>Ask Rick</span>
-                </button>
-
-                {/* Animated Professor - renders when active */}
-                {showProfessor && (
-                    <AnimatedProfessor
-                        page={getPageFromRoute()}
-                        onDismiss={() => setShowProfessor(false)}
-                    />
-                )}
 
                 <div className="sidebar-footer">
                     <div className="user-info">
