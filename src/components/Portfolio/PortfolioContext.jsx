@@ -109,6 +109,10 @@ export function PortfolioProvider({ children }) {
                 }
 
                 const portfolio = JSON.parse(stored);
+
+                // DEBUG: Log pnl values read from localStorage
+                console.log('READ from localStorage - pnl values:', portfolio.map(h => ({ symbol: h.symbol, pnl: h.pnl })));
+
                 const symbols = portfolio.map(h => h.symbol);
 
                 if (symbols.length === 0) {
