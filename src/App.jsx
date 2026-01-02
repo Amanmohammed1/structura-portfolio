@@ -11,6 +11,7 @@ import {
   NextInvestmentPage
 } from './pages';
 import UpstoxCallbackPage from './pages/UpstoxCallback';
+import ZerodhaCallbackPage from './pages/ZerodhaCallback';
 import './styles/index.css';
 
 // Simple loading component
@@ -96,6 +97,11 @@ function AppRoutes() {
       <Route path="/callback/upstox" element={
         <ProtectedRoute>
           <UpstoxCallbackPage />
+        </ProtectedRoute>
+      } />
+      <Route path="/zerodha-callback" element={
+        <ProtectedRoute>
+          <ZerodhaCallbackPage />
         </ProtectedRoute>
       } />
       <Route path="*" element={<Navigate to="/" replace />} />

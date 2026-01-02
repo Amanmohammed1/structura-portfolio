@@ -257,6 +257,7 @@ export function PortfolioImport({ onImport, onClose }) {
 
                     {activeTab === 'upstox' && (
                         <div className="broker-connect">
+                            {/* Upstox Card */}
                             <div className="broker-card" onClick={async () => {
                                 try {
                                     setError('');
@@ -287,8 +288,43 @@ export function PortfolioImport({ onImport, onClose }) {
                                 <p>Connect your Upstox account</p>
                                 <span className="connect-btn">Connect →</span>
                             </div>
+
+                            {/* Zerodha Card */}
+                            <div className="broker-card" onClick={async () => {
+                                try {
+                                    setError('');
+                                    const { data, error: fetchError } = await supabase.functions.invoke('zerodha-auth', {
+                                        body: { action: 'get_auth_url' }
+                                    });
+                                    if (fetchError || !data?.authUrl) {
+                                        throw new Error(data?.error || 'Failed to get auth URL');
+                                    }
+                                    window.location.href = data.authUrl;
+                                } catch (err) {
+                                    setError('Failed to connect to Zerodha: ' + err.message);
+                                }
+                            }}>
+                                <div className="broker-logo" style={{
+                                    background: 'linear-gradient(135deg, #387ed1 0%, #2962B5 100%)',
+                                    borderRadius: '12px',
+                                    width: '48px',
+                                    height: '48px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    color: 'white',
+                                    fontSize: '1.5rem',
+                                    fontWeight: 'bold'
+                                }}>
+                                    K
+                                </div>
+                                <h3>Zerodha</h3>
+                                <p>Connect your Kite account</p>
+                                <span className="connect-btn">Connect →</span>
+                            </div>
+
                             <p className="broker-note">
-                                Click to login with your Upstox account and import your holdings
+                                Click on your broker to login and import your holdings
                             </p>
                         </div>
                     )}
