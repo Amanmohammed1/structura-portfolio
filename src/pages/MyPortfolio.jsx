@@ -134,9 +134,10 @@ export function MyPortfolioPage() {
             };
         }
 
-        // Totals
+        // Totals - use broker's P&L values when available
         const totalInvested = currentHoldings.reduce((sum, h) => sum + h.investedValue, 0);
-        const totalPnl = totalCurrentValue - totalInvested;
+        // Sum broker P&L if available, otherwise calculate
+        const totalPnl = currentHoldings.reduce((sum, h) => sum + h.pnl, 0);
         const pnlPercent = totalInvested > 0 ? (totalPnl / totalInvested) * 100 : 0;
 
         return {
