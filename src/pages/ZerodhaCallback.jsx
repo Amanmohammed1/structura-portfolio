@@ -8,11 +8,29 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../config/supabase';
 import { fetchSectorCache, getSector } from '../data/assetUniverse';
 
+// Table styles
+const thStyle = {
+    padding: '0.75rem 1rem',
+    textAlign: 'left',
+    fontSize: '0.75rem',
+    fontWeight: 600,
+    color: 'var(--text-tertiary)',
+    textTransform: 'uppercase',
+    letterSpacing: '0.5px'
+};
+
+const tdStyle = {
+    padding: '0.75rem 1rem',
+    fontSize: '0.9rem'
+};
+
 export function ZerodhaCallbackPage() {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const [status, setStatus] = useState('Processing...');
     const [error, setError] = useState('');
+    const [holdings, setHoldings] = useState(null);
+    const [showPreview, setShowPreview] = useState(false);
 
     useEffect(() => {
         async function handleCallback() {
@@ -53,16 +71,10 @@ export function ZerodhaCallbackPage() {
                     sector: getSector(h.tradingSymbol) || 'Other',
                 }));
 
-                // Save to localStorage - match the format Dashboard expects
-                localStorage.setItem('upstox_holdings', JSON.stringify({ holdings: enrichedHoldings }));
-                localStorage.setItem('structura_import_source', 'zerodha');
-
-                setStatus('Import complete! Redirecting...');
-
-                // Redirect to dashboard with import flag
-                setTimeout(() => {
-                    navigate('/?import=upstox'); // Reuse same import flow
-                }, 1000);
+                // Show preview instead of auto-importing
+                setHoldings(enrichedHoldings);
+                setShowPreview(true);
+                setStatus(`Found ${enrichedHoldings.length} stocks from Zerodha`);
 
             } catch (err) {
                 console.error('Zerodha callback error:', err);
@@ -73,6 +85,177 @@ export function ZerodhaCallbackPage() {
         handleCallback();
     }, [searchParams, navigate]);
 
+    // Confirm import - save to localStorage and redirect
+    const handleConfirmImport = () => {
+        localStorage.setItem('upstox_holdings', JSON.stringify({
+            holdings,
+            fetchedAt: new Date().toISOString(),
+            count: holdings.length
+        }));
+        localStorage.setItem('structura_import_source', 'zerodha');
+        navigate('/?import=upstox');
+    };
+
+    // Cancel import
+    const handleCancel = () => {
+        navigate('/');
+    };
+
+    // Calculate totals for preview
+    const totalValue = holdings?.reduce((sum, h) => sum + (h.currentValue || 0), 0) || 0;
+    const totalPnL = holdings?.reduce((sum, h) => sum + (h.pnl || 0), 0) || 0;
+
+    // Preview UI
+    if (showPreview && holdings) {
+        return (
+            <div className="dashboard-content" style={{
+                minHeight: '100vh',
+                padding: '2rem'
+            }}>
+                <div className="glass-card" style={{
+                    maxWidth: '900px',
+                    margin: '0 auto',
+                    padding: '2rem'
+                }}>
+                    <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+                        <div style={{
+                            width: '60px',
+                            height: '60px',
+                            margin: '0 auto 1rem',
+                            borderRadius: '12px',
+                            overflow: 'hidden'
+                        }}>
+                            <img
+                                src="/kite_logo.png"
+                                alt="Zerodha Kite"
+                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                            />
+                        </div>
+                        <h2 style={{ color: 'var(--accent-cyan)', marginBottom: '0.5rem' }}>
+                            Zerodha Portfolio Preview
+                        </h2>
+                        <p style={{ color: 'var(--text-secondary)' }}>
+                            Review your holdings before importing
+                        </p>
+                    </div>
+
+                    {/* Summary Stats */}
+                    <div style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(3, 1fr)',
+                        gap: '1rem',
+                        marginBottom: '2rem'
+                    }}>
+                        <div className="glass-card" style={{ padding: '1rem', textAlign: 'center' }}>
+                            <div style={{ fontSize: '0.85rem', color: 'var(--text-tertiary)' }}>Total Stocks</div>
+                            <div style={{ fontSize: '1.5rem', fontWeight: 600, color: 'var(--accent-cyan)' }}>
+                                {holdings.length}
+                            </div>
+                        </div>
+                        <div className="glass-card" style={{ padding: '1rem', textAlign: 'center' }}>
+                            <div style={{ fontSize: '0.85rem', color: 'var(--text-tertiary)' }}>Total Value</div>
+                            <div style={{ fontSize: '1.5rem', fontWeight: 600, color: 'var(--accent-green)' }}>
+                                ₹{totalValue.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+                            </div>
+                        </div>
+                        <div className="glass-card" style={{ padding: '1rem', textAlign: 'center' }}>
+                            <div style={{ fontSize: '0.85rem', color: 'var(--text-tertiary)' }}>Total P&L</div>
+                            <div style={{
+                                fontSize: '1.5rem',
+                                fontWeight: 600,
+                                color: totalPnL >= 0 ? 'var(--accent-green)' : 'var(--accent-red)'
+                            }}>
+                                {totalPnL >= 0 ? '+' : ''}₹{totalPnL.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Holdings Table */}
+                    <div style={{
+                        maxHeight: '400px',
+                        overflowY: 'auto',
+                        marginBottom: '2rem',
+                        border: '1px solid var(--glass-border)',
+                        borderRadius: '8px'
+                    }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                            <thead style={{
+                                background: 'var(--glass-bg)',
+                                position: 'sticky',
+                                top: 0
+                            }}>
+                                <tr>
+                                    <th style={thStyle}>Symbol</th>
+                                    <th style={{ ...thStyle, textAlign: 'right' }}>Qty</th>
+                                    <th style={{ ...thStyle, textAlign: 'right' }}>Avg Price</th>
+                                    <th style={{ ...thStyle, textAlign: 'right' }}>LTP</th>
+                                    <th style={{ ...thStyle, textAlign: 'right' }}>P&L</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {holdings.map((h, i) => (
+                                    <tr key={i} style={{ borderBottom: '1px solid var(--glass-border)' }}>
+                                        <td style={tdStyle}>
+                                            <div style={{ fontWeight: 500 }}>{h.tradingSymbol}</div>
+                                            <div style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>
+                                                {h.sector}
+                                            </div>
+                                        </td>
+                                        <td style={{ ...tdStyle, textAlign: 'right' }}>{h.quantity}</td>
+                                        <td style={{ ...tdStyle, textAlign: 'right' }}>
+                                            ₹{h.avgPrice?.toFixed(2)}
+                                        </td>
+                                        <td style={{ ...tdStyle, textAlign: 'right' }}>
+                                            ₹{h.currentPrice?.toFixed(2)}
+                                        </td>
+                                        <td style={{
+                                            ...tdStyle,
+                                            textAlign: 'right',
+                                            fontWeight: 500,
+                                            color: h.pnl >= 0 ? 'var(--accent-green)' : 'var(--accent-red)'
+                                        }}>
+                                            {h.pnl >= 0 ? '+' : ''}₹{h.pnl?.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div style={{
+                        display: 'flex',
+                        gap: '1rem',
+                        justifyContent: 'center'
+                    }}>
+                        <button
+                            className="btn"
+                            onClick={handleCancel}
+                            style={{
+                                padding: '0.75rem 2rem',
+                                background: 'transparent',
+                                border: '1px solid var(--glass-border)'
+                            }}
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            className="btn btn-primary"
+                            onClick={handleConfirmImport}
+                            style={{
+                                padding: '0.75rem 2rem',
+                                background: 'linear-gradient(135deg, #387ed1, #2962B5)'
+                            }}
+                        >
+                            Import {holdings.length} Holdings
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // Loading/Error UI
     return (
         <div style={{
             minHeight: '100vh',
@@ -96,14 +279,14 @@ export function ZerodhaCallbackPage() {
                     width: '80px',
                     height: '80px',
                     margin: '0 auto 1.5rem',
-                    background: 'linear-gradient(135deg, #387ed1, #2962B5)',
                     borderRadius: '16px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '2rem',
+                    overflow: 'hidden'
                 }}>
-                    📈
+                    <img
+                        src="/kite_logo.png"
+                        alt="Zerodha Kite"
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
                 </div>
 
                 {error ? (
@@ -127,7 +310,7 @@ export function ZerodhaCallbackPage() {
                     </>
                 ) : (
                     <>
-                        <h2 style={{ marginBottom: '1rem' }}>Importing from Zerodha</h2>
+                        <h2 style={{ marginBottom: '1rem' }}>Connecting to Zerodha</h2>
                         <p style={{ color: '#a0a0a0', marginBottom: '1.5rem' }}>{status}</p>
                         <div style={{
                             width: '40px',
