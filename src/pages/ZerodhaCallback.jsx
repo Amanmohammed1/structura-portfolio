@@ -53,8 +53,8 @@ export function ZerodhaCallbackPage() {
                     sector: getSector(h.tradingSymbol) || 'Other',
                 }));
 
-                // Save to localStorage
-                localStorage.setItem('upstox_holdings', JSON.stringify(enrichedHoldings));
+                // Save to localStorage - match the format Dashboard expects
+                localStorage.setItem('upstox_holdings', JSON.stringify({ holdings: enrichedHoldings }));
                 localStorage.setItem('structura_import_source', 'zerodha');
 
                 setStatus('Import complete! Redirecting...');
