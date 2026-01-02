@@ -304,19 +304,17 @@ export function PortfolioImport({ onImport, onClose }) {
                                     setError('Failed to connect to Zerodha: ' + err.message);
                                 }
                             }}>
-                                <div className="broker-logo" style={{
-                                    background: 'linear-gradient(135deg, #387ed1 0%, #2962B5 100%)',
-                                    borderRadius: '12px',
-                                    width: '48px',
-                                    height: '48px',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    color: 'white',
-                                    fontSize: '1.5rem',
-                                    fontWeight: 'bold'
-                                }}>
-                                    K
+                                <div className="broker-logo">
+                                    <img
+                                        src="/kite_logo.png"
+                                        alt="Zerodha Kite"
+                                        style={{
+                                            width: '48px',
+                                            height: '48px',
+                                            borderRadius: '12px',
+                                            objectFit: 'cover'
+                                        }}
+                                    />
                                 </div>
                                 <h3>Zerodha</h3>
                                 <p>Connect your Kite account</p>
