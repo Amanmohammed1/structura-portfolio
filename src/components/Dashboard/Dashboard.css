@@ -872,8 +872,7 @@
         gap: 0.5rem;
         padding: 0.75rem;
         margin-bottom: 1rem;
-        margin-top: 3.5rem;
-        /* Space for hamburger button */
+        /* No margin-top needed - hamburger is position: fixed and floats over */
     }
 
     .portfolio-actions .btn {

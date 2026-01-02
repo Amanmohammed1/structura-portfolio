@@ -271,19 +271,17 @@ export function PortfolioImport({ onImport, onClose }) {
                                     setError('Failed to connect to Upstox: ' + err.message);
                                 }
                             }}>
-                                <div className="broker-logo" style={{
-                                    background: 'linear-gradient(135deg, #7B2FF7 0%, #9747FF 100%)',
-                                    borderRadius: '12px',
-                                    padding: '12px',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center'
-                                }}>
-                                    <svg width="40" height="40" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M24 4L8 14V34L24 44L40 34V14L24 4Z" fill="white" fillOpacity="0.9" />
-                                        <path d="M24 12L14 18V30L24 36L34 30V18L24 12Z" fill="#7B2FF7" />
-                                        <path d="M24 18V30M18 24H30" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
-                                    </svg>
+                                <div className="broker-logo">
+                                    <img
+                                        src="/upstox_logo.jpeg"
+                                        alt="Upstox"
+                                        style={{
+                                            width: '48px',
+                                            height: '48px',
+                                            borderRadius: '12px',
+                                            objectFit: 'cover'
+                                        }}
+                                    />
                                 </div>
                                 <h3>Upstox</h3>
                                 <p>Connect your Upstox account</p>
