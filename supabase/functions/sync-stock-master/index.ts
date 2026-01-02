@@ -96,14 +96,24 @@ serve(async (req) => {
         );
         console.log(`NIFTY 100: ${nifty100Symbols.size} stocks`);
 
-        // 4. Fetch NIFTY 500 components
+        // 4. Fetch NIFTY 500 components (includes Industry column!)
         const nifty500CSV = await fetchNSEData(NSE_URLS.nifty500);
-        const nifty500Symbols = new Set(
-            nifty500CSV ? parseCSV(nifty500CSV).map(r => r.Symbol || r.SYMBOL) : []
-        );
-        console.log(`NIFTY 500: ${nifty500Symbols.size} stocks`);
+        const nifty500Data = nifty500CSV ? parseCSV(nifty500CSV) : [];
+        const nifty500Symbols = new Set(nifty500Data.map(r => r.Symbol || r.SYMBOL));
+
+        // Build sector map from NIFTY 500 data (has Industry column)
+        const sectorMap: Record<string, string> = {};
+        for (const row of nifty500Data) {
+            const symbol = row.Symbol || row.SYMBOL;
+            const industry = row.Industry || row['Industry'] || row.INDUSTRY || '';
+            if (symbol && industry) {
+                sectorMap[symbol] = industry;
+            }
+        }
+        console.log(`NIFTY 500: ${nifty500Symbols.size} stocks with ${Object.keys(sectorMap).length} sectors`);
 
         // 5. Transform to our schema - ZERO HARDCODING
+        // Sector comes from NIFTY 500 Industry column (official NSE data)
         const stocks = allStocks
             .filter(s => s.SYMBOL && s['NAME OF COMPANY'])
             .map(stock => {
@@ -115,6 +125,7 @@ serve(async (req) => {
                     isin: stock[' ISIN NUMBER'] || stock['ISIN NUMBER'] || null,
                     series: stock[' SERIES'] || stock['SERIES'] || 'EQ',
                     exchange: 'NSE',
+                    sector: sectorMap[symbol] || null, // Industry from NIFTY 500 CSV
                     is_nifty50: nifty50Symbols.has(symbol),
                     is_nifty100: nifty100Symbols.has(symbol),
                     is_nifty500: nifty500Symbols.has(symbol),
@@ -133,6 +144,7 @@ serve(async (req) => {
             isin: null,
             series: 'INDEX',
             exchange: 'NSE',
+            sector: 'Index',
             is_nifty50: false,
             is_nifty100: false,
             is_nifty500: false,

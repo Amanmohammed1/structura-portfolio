@@ -307,16 +307,16 @@ export function NextInvestmentPage() {
                                     <span className="factor-name">Momentum</span>
                                     <StarRating score={rec.factorScore.momentum} />
                                 </div>
-                                <div className="factor">
-                                    <span className="factor-name">Value</span>
+                                <div className="factor coming-soon">
+                                    <span className="factor-name">Value <span className="badge">Soon</span></span>
                                     <StarRating score={rec.factorScore.value} />
                                 </div>
-                                <div className="factor">
-                                    <span className="factor-name">Quality</span>
+                                <div className="factor coming-soon">
+                                    <span className="factor-name">Quality <span className="badge">Soon</span></span>
                                     <StarRating score={rec.factorScore.quality} />
                                 </div>
-                                <div className="factor">
-                                    <span className="factor-name">Stability</span>
+                                <div className="factor coming-soon">
+                                    <span className="factor-name">Stability <span className="badge">Soon</span></span>
                                     <StarRating score={rec.factorScore.lowVol} />
                                 </div>
                             </div>

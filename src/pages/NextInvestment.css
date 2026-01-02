@@ -319,6 +319,23 @@
     margin-bottom: 0.25rem;
 }
 
+.factor-name .badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+    font-size: 0.5rem;
+    padding: 0.15rem 0.35rem;
+    border-radius: 4px;
+    margin-left: 0.25rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    vertical-align: middle;
+}
+
+.factor.coming-soon .star-rating {
+    opacity: 0.4;
+}
+
 .star-rating {
     font-size: 0.875rem;
 }
