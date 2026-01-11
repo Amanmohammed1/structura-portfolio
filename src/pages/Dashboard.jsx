@@ -12,6 +12,7 @@ import {
 } from '../components/Visualizations';
 import { usePrices, useHRP } from '../hooks';
 import { formatMetrics } from '../lib/hrp/backtest';
+import { filterUniverse, filterPriceData } from '../lib/hrp/universeFilter';
 import { calculateHealthScore } from '../lib/analytics/portfolioHealth';
 import {
     generateRebalancingSuggestions,
@@ -48,6 +49,7 @@ export function DashboardPage() {
     const { prices, loading: pricesLoading, error: pricesError, progress, fetchPrices } = usePrices();
     const { result, backtest, loading: analyzing, error: hrpError, analyze, visualizationData, chartData } = useHRP();
     const [searchParams, setSearchParams] = useSearchParams();
+    const [excludedStocks, setExcludedStocks] = useState([]);
     const navigate = useNavigate();
 
     const [showImport, setShowImport] = useState(false);
@@ -181,8 +183,21 @@ export function DashboardPage() {
         const portfolioData = { ...priceData };
         delete portfolioData['^NSEI'];
 
-        if (Object.keys(portfolioData).length >= 2) {
-            analyze(portfolioData, niftyData);
+        // FILTER UNIVERSE: Remove penny stocks, bad data, flatlines
+        const holdingsWithPrices = portfolio.holdings.map(h => ({
+            ...h,
+            currentPrice: portfolioData[h.symbol]?.slice(-1)[0]?.close || h.currentPrice || 0
+        }));
+        const { included, excluded } = filterUniverse(holdingsWithPrices, portfolioData);
+        setExcludedStocks(excluded);
+
+        // Only run HRP on filtered stocks
+        const filteredPriceData = filterPriceData(portfolioData, included.map(h => h.symbol));
+
+        if (Object.keys(filteredPriceData).length >= 2) {
+            analyze(filteredPriceData, niftyData);
+        } else {
+            console.warn('Not enough stocks after filtering for HRP analysis');
         }
     }, [portfolio, dateRange, fetchPrices, analyze]);
 
@@ -212,8 +227,18 @@ export function DashboardPage() {
                 const portfolioData = { ...priceData };
                 delete portfolioData['^NSEI'];
 
-                if (Object.keys(portfolioData).length >= 2) {
-                    analyze(portfolioData, niftyData);
+                // FILTER UNIVERSE before HRP
+                const holdingsWithPrices = portfolio.holdings.map(h => ({
+                    ...h,
+                    currentPrice: portfolioData[h.symbol]?.slice(-1)[0]?.close || h.currentPrice || 0
+                }));
+                const { included, excluded } = filterUniverse(holdingsWithPrices, portfolioData);
+                setExcludedStocks(excluded);
+
+                const filteredPriceData = filterPriceData(portfolioData, included.map(h => h.symbol));
+
+                if (Object.keys(filteredPriceData).length >= 2) {
+                    analyze(filteredPriceData, niftyData);
                 }
             }).catch(err => {
                 console.error('Auto-analyze failed:', err.message);
@@ -249,8 +274,18 @@ export function DashboardPage() {
                 const portfolioData = { ...priceData };
                 delete portfolioData['^NSEI'];
 
-                if (Object.keys(portfolioData).length >= 2) {
-                    analyze(portfolioData, niftyData); // Pass niftyData!
+                // FILTER UNIVERSE before HRP
+                const holdingsWithPrices = portfolio.holdings.map(h => ({
+                    ...h,
+                    currentPrice: portfolioData[h.symbol]?.slice(-1)[0]?.close || h.currentPrice || 0
+                }));
+                const { included, excluded } = filterUniverse(holdingsWithPrices, portfolioData);
+                setExcludedStocks(excluded);
+
+                const filteredPriceData = filterPriceData(portfolioData, included.map(h => h.symbol));
+
+                if (Object.keys(filteredPriceData).length >= 2) {
+                    analyze(filteredPriceData, niftyData);
                 }
             });
         }
@@ -332,13 +367,15 @@ export function DashboardPage() {
 
     const isLoading = pricesLoading || analyzing;
 
-    // Calculate portfolio totals
+    // Calculate portfolio totals - USE BROKER'S P&L DIRECTLY
     const portfolioTotals = useMemo(() => {
         if (enrichedHoldings.length === 0) return null;
 
-        const invested = enrichedHoldings.reduce((sum, h) => sum + (h.investedValue || 0), 0);
         const current = enrichedHoldings.reduce((sum, h) => sum + (h.currentValue || 0), 0);
-        const pnl = current - invested;
+        // USE BROKER'S P&L - don't recalculate!
+        const pnl = enrichedHoldings.reduce((sum, h) => sum + (h.pnl || 0), 0);
+        // Calculate invested from current - pnl (more accurate than summing investedValue)
+        const invested = current - pnl;
         const pnlPercent = invested > 0 ? (pnl / invested) * 100 : 0;
 
         return { invested, current, pnl, pnlPercent };
@@ -528,6 +565,27 @@ export function DashboardPage() {
                                 <span className="panel-title">Rebalancing Suggestions</span>
                             </div>
                             <div className="panel-body">
+                                {/* Show excluded stocks if any */}
+                                {excludedStocks.length > 0 && (
+                                    <div className="excluded-stocks-notice" style={{
+                                        background: 'rgba(255, 193, 7, 0.1)',
+                                        border: '1px solid rgba(255, 193, 7, 0.3)',
+                                        borderRadius: '8px',
+                                        padding: '1rem',
+                                        marginBottom: '1rem'
+                                    }}>
+                                        <div style={{ fontWeight: 600, color: '#ffc107', marginBottom: '0.5rem' }}>
+                                            ⚠️ {excludedStocks.length} stock(s) excluded from optimization:
+                                        </div>
+                                        <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                                            {excludedStocks.map(e => (
+                                                <div key={e.symbol} style={{ marginBottom: '0.25rem' }}>
+                                                    <strong>{e.symbol.replace('.NS', '')}</strong>: {e.reason}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
                                 <RebalancingSuggestions
                                     suggestions={rebalancing?.suggestions}
                                     summary={rebalancing?.summary}
